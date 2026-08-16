@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sprite Tracker · Fortnite</title>
+<meta name="description" content="An unofficial, account-free checklist and progress dashboard for Fortnite Sprites. All data stays in your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">◆</span>
+    <span class="brand-text">Sprite Tracker</span>
+  </div>
+
+  <nav class="view-switch" id="viewSwitch">
+    <button type="button" class="view-switch-btn active" data-view="checklist">Checklist</button>
+    <button type="button" class="view-switch-btn" data-view="dashboard">Dashboard</button>
+  </nav>
+
+  <div class="topbar-actions">
+    <button id="syncBtn" class="sync-code-chip" title="Your sync code — click to manage">
+      <svg viewBox="0 0 24 24" width="13" height="13" style="flex-shrink:0;opacity:0.7"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      <span id="syncCodeChip">···</span>
+    </button>
+    <button id="exportBtn" class="icon-btn" title="Export your data as a backup file">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09L17.5 7.5 12 2z"/></svg>
+    </button>
+    <button id="importBtn" class="icon-btn" title="Import a backup file">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 16l5.5-5.5-1.42-1.42L13 12.17V2h-2v10.17L7.92 9.08 6.5 10.5 12 16z"/></svg>
+    </button>
+    <input type="file" id="importFile" accept="application/json" hidden />
+    <button id="resetBtn" class="icon-btn danger" title="Clear all data on this device">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="checklistView" class="view"></main>
+<main id="dashboardView" class="view" hidden></main>
+
+<div id="toast" class="toast" hidden></div>
+
+<div id="syncModal" class="modal-backdrop" hidden>
+  <div class="modal sync-modal">
+    <h3>Sync across devices</h3>
+
+    <div class="sync-section">
+      <p class="sync-hint">Your sync code — save it to access your checklist from any browser or device.</p>
+      <div class="sync-code-box">
+        <span class="sync-code-value" id="syncCodeDisplay">connecting&hellip;</span>
+        <button type="button" class="btn-copy" id="syncCopyBtn">Copy</button>
+      </div>
+    </div>
+
+    <hr class="sync-divider" />
+
+    <div class="sync-section">
+      <p class="sync-connect-label">Connect to an existing account</p>
+      <p class="sync-hint">Enter a sync code from another device to load its checklist here. <strong>This replaces your current data on this device.</strong></p>
+      <div class="sync-connect-row">
+        <input type="text" id="syncCodeInput" placeholder="e.g. swift-otter-42" autocomplete="off" spellcheck="false" />
+        <button type="button" id="syncConnectBtn" class="btn-primary">Connect</button>
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button type="button" id="syncCloseBtn" class="btn-ghost">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-backdrop" hidden>
+  <div class="modal">
+    <h3 id="confirmTitle">Clear all data?</h3>
+    <p id="confirmBody">This removes your entire Sprite checklist and history from this browser. Export a backup first if you want to keep it.</p>
+    <div class="modal-actions">
+      <button id="confirmCancel" class="btn-ghost">Cancel</button>
+      <button id="confirmOk" class="btn-danger">Clear everything</button>
+    </div>
+  </div>
+</div>
+
+<footer class="app-footer">
+  <p>
+    Unofficial fan project — not affiliated with, endorsed by, or sponsored by Epic Games, Inc.
+    Fortnite is a trademark of Epic Games, Inc. Sprite names, rarities, and images compiled from
+    <a href="https://beebom.com/fortnite-sprites-guide/" target="_blank" rel="noopener">Beebom's Sprites guide</a>.
+    Everything you check off is stored only in this browser — nothing is sent to a server.
+  </p>
+</footer>
+
+<script src="spritesData.js"></script>
+<script src="store.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
