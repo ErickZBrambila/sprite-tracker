@@ -1,5 +1,7 @@
 const { sql, createClient, ensureSchema } = require('../../_db');
 
+module.exports.config = { api: { bodyParser: { sizeLimit: '2mb' } } };
+
 module.exports = async function handler(req, res) {
   await ensureSchema();
   const { deviceId } = req.query;
