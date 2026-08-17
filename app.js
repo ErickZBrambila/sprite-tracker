@@ -11,6 +11,7 @@ window.addEventListener('resize', setDeviceType);
 
 const checklistViewEl = el('checklistView');
 const dashboardViewEl = el('dashboardView');
+const compareViewEl   = el('compareView');
 const viewSwitchEl = el('viewSwitch');
 const exportBtn = el('exportBtn');
 const importBtn = el('importBtn');
@@ -159,6 +160,7 @@ viewSwitchEl.addEventListener('click', (e) => {
   [...viewSwitchEl.children].forEach((b) => b.classList.toggle('active', b === btn));
   checklistViewEl.hidden = currentView !== 'checklist';
   dashboardViewEl.hidden = currentView !== 'dashboard';
+  compareViewEl.hidden   = currentView !== 'compare';
   render();
 });
 
@@ -552,8 +554,202 @@ function renderDashboard() {
   dashboardViewEl.appendChild(wrap);
 }
 
+// ================= Compare view =================
+
+const FRIEND_COLORS = ['#22d3ee', '#ff9f43', '#ff5c7a', '#4ade80'];
+
+function makePersonCard(name, owned, mastered, color, isYou, friendCode) {
+  const card = document.createElement('div');
+  card.className = 'person-card';
+  card.style.setProperty('--person-color', color);
+
+  const ownedPct  = Math.round(owned / TOTAL * 100);
+  const mastPct   = Math.round(mastered / TOTAL * 100);
+
+  card.innerHTML = `
+    <div class="person-name">${name}</div>
+    <div class="person-stats">
+      <div class="person-stat"><span class="person-stat-num">${owned}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Collected</div></div>
+      <div class="person-stat"><span class="person-stat-num">${mastered}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Mastered</div></div>
+    </div>
+    <div class="person-bar-wrap">
+      <div class="person-bar"><div class="person-bar-fill" style="width:${ownedPct}%;background:${color}"></div></div>
+      <div class="person-bar"><div class="person-bar-fill" style="width:${mastPct}%;background:${color};opacity:0.6"></div></div>
+    </div>
+    ${!isYou ? `<button class="person-remove-btn" data-code="${friendCode}" title="Remove">✕</button>` : ''}
+    ${!isYou ? `<button class="person-refresh-btn" data-code="${friendCode}" title="Refresh">↻</button>` : ''}
+  `;
+  return card;
+}
+
+function renderCompare() {
+  compareViewEl.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'compare-wrap';
+
+  const friends  = SpriteStore.getFriends();
+  const myState  = SpriteStore.getCurrentState();
+  const myOwned  = CATALOG.filter(s => myState[s.id]?.owned).length;
+  const myMast   = CATALOG.filter(s => myState[s.id]?.mastered).length;
+
+  const people = [
+    { name: getUsername() || 'You', state: myState, color: 'var(--accent)' },
+    ...friends.map((f, i) => ({ name: f.name, state: f.state || {}, color: FRIEND_COLORS[i], code: f.code, fetchedAt: f.fetchedAt })),
+  ];
+
+  // ---- People cards row ----
+  const peopleRow = document.createElement('div');
+  peopleRow.className = 'compare-people';
+  peopleRow.appendChild(makePersonCard(people[0].name, myOwned, myMast, people[0].color, true, null));
+
+  friends.forEach((f, i) => {
+    const owned    = CATALOG.filter(s => f.state?.[s.id]?.owned).length;
+    const mastered = CATALOG.filter(s => f.state?.[s.id]?.mastered).length;
+    peopleRow.appendChild(makePersonCard(f.name, owned, mastered, FRIEND_COLORS[i], false, f.code));
+  });
+
+  if (friends.length < 4) {
+    const addBtn = document.createElement('button');
+    addBtn.className = 'compare-add-btn';
+    addBtn.innerHTML = '<span>+</span>Add Friend';
+    addBtn.addEventListener('click', () => { el('addFriendModal').hidden = false; el('friendCodeInput').focus(); });
+    peopleRow.appendChild(addBtn);
+  }
+
+  wrap.appendChild(peopleRow);
+
+  // Remove / refresh friend handlers
+  peopleRow.addEventListener('click', async (e) => {
+    const removeBtn  = e.target.closest('.person-remove-btn');
+    const refreshBtn = e.target.closest('.person-refresh-btn');
+    if (removeBtn) {
+      SpriteStore.removeFriend(removeBtn.dataset.code);
+      renderCompare();
+    }
+    if (refreshBtn) {
+      refreshBtn.textContent = '…';
+      refreshBtn.disabled = true;
+      const result = await SpriteStore.refreshFriend(refreshBtn.dataset.code);
+      if (!result.ok) showToast(result.error, 'error');
+      renderCompare();
+    }
+  });
+
+  // ---- Legend ----
+  const legend = document.createElement('div');
+  legend.className = 'compare-legend';
+  legend.innerHTML = people.map((p, i) => `
+    <span class="compare-legend-item">
+      <span class="compare-dot compare-dot--owned" style="background:${p.color}"></span>
+      ${p.name}
+    </span>
+  `).join('');
+  wrap.appendChild(legend);
+
+  // ---- Sprite grid ----
+  const speciesGroups = {};
+  for (const s of CATALOG) {
+    if (!speciesGroups[s.species]) speciesGroups[s.species] = { rarity: s.rarity, sprites: [] };
+    speciesGroups[s.species].sprites.push(s);
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'compare-grid';
+
+  for (const [species, { rarity, sprites }] of Object.entries(speciesGroups)) {
+    const group = document.createElement('div');
+    group.className = `compare-species rarity-${rarity}`;
+
+    const header = document.createElement('div');
+    header.className = 'compare-species-header';
+    const counts = people.map(p => sprites.filter(s => p.state[s.id]?.owned).length);
+    header.innerHTML = `
+      <span class="compare-species-name">${species}</span>
+      <span class="compare-species-counts">${counts.map((c, i) => `<span style="color:${people[i].color}">${c}/${sprites.length}</span>`).join(' ')}</span>
+    `;
+    group.appendChild(header);
+
+    const chipsRow = document.createElement('div');
+    chipsRow.className = 'compare-chips';
+
+    for (const sprite of sprites) {
+      const chip = document.createElement('div');
+      chip.className = 'compare-chip';
+
+      if (sprite.icon) {
+        const img = document.createElement('img');
+        img.src = sprite.icon;
+        img.alt = sprite.variant;
+        img.className = 'compare-chip-img';
+        chip.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = `compare-chip-ph rarity-bg-${rarity}`;
+        chip.appendChild(ph);
+      }
+
+      const lbl = document.createElement('div');
+      lbl.className = 'compare-chip-label';
+      lbl.textContent = sprite.variant;
+      chip.appendChild(lbl);
+
+      const dots = document.createElement('div');
+      dots.className = 'compare-dots';
+      for (const p of people) {
+        const s = p.state[sprite.id];
+        const dot = document.createElement('span');
+        dot.className = 'compare-dot' + (s?.mastered ? ' compare-dot--mastered' : s?.owned ? ' compare-dot--owned' : '');
+        dot.style.setProperty('--dot-color', p.color);
+        dot.title = `${p.name}: ${s?.mastered ? 'Mastered' : s?.owned ? 'Owned' : 'Missing'}`;
+        dot.textContent = s?.mastered ? '★' : '';
+        dots.appendChild(dot);
+      }
+      chip.appendChild(dots);
+      chipsRow.appendChild(chip);
+    }
+    group.appendChild(chipsRow);
+    grid.appendChild(group);
+  }
+
+  wrap.appendChild(grid);
+  compareViewEl.appendChild(wrap);
+}
+
+// ---- Add friend modal ----
+const addFriendModal      = el('addFriendModal');
+const friendCodeInput     = el('friendCodeInput');
+const friendNameInput     = el('friendNameInput');
+const addFriendCancelBtn  = el('addFriendCancelBtn');
+const addFriendConfirmBtn = el('addFriendConfirmBtn');
+
+addFriendCancelBtn.addEventListener('click', () => { addFriendModal.hidden = true; });
+addFriendModal.addEventListener('click', e => { if (e.target === addFriendModal) addFriendModal.hidden = true; });
+
+addFriendConfirmBtn.addEventListener('click', async () => {
+  const code = friendCodeInput.value.trim();
+  const name = friendNameInput.value.trim();
+  if (!code) return;
+  addFriendConfirmBtn.disabled = true;
+  addFriendConfirmBtn.textContent = 'Adding…';
+  const result = await SpriteStore.addFriend(code, name);
+  addFriendConfirmBtn.disabled = false;
+  addFriendConfirmBtn.textContent = 'Add';
+  if (result.ok) {
+    addFriendModal.hidden = true;
+    friendCodeInput.value = '';
+    friendNameInput.value = '';
+    renderCompare();
+    showToast(`${name || code} added!`);
+  } else {
+    showToast(result.error, 'error');
+  }
+});
+
+friendCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') addFriendConfirmBtn.click(); });
+
 function render() {
   if (currentView === 'checklist') renderChecklist();
+  else if (currentView === 'compare') renderCompare();
   else renderDashboard();
 }
 

@@ -528,6 +528,212 @@ button:active { transform: scale(0.97); }
 ::-webkit-scrollbar-thumb { background: var(--border-solid); border-radius: 999px; }
 ::-webkit-scrollbar-track { background: transparent; }
 
+/* ========== Compare view ========== */
+
+.compare-wrap { padding: 12px 0 60px; max-width: 900px; margin: 0 auto; }
+
+/* People row */
+.compare-people {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+}
+
+.person-card {
+  position: relative;
+  flex: 1 0 160px;
+  min-width: 148px;
+  max-width: 220px;
+  background: var(--panel);
+  border: 1.5px solid var(--person-color, var(--accent));
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: 0 0 18px -8px var(--person-color, var(--accent));
+}
+
+.person-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--person-color, var(--accent));
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.person-stats { display: flex; gap: 12px; margin-bottom: 10px; }
+.person-stat { flex: 1; text-align: center; }
+.person-stat-num { font-size: 22px; font-weight: 700; color: var(--person-color, var(--accent)); font-family: 'Space Grotesk', sans-serif; }
+.person-stat-den { font-size: 12px; color: var(--muted); }
+.person-stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .04em; }
+
+.person-bar-wrap { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+.person-bar { height: 6px; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
+.person-bar-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
+
+.person-remove-btn,
+.person-refresh-btn {
+  position: absolute;
+  top: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color .15s;
+}
+.person-remove-btn { right: 6px; }
+.person-refresh-btn { right: 26px; }
+.person-remove-btn:hover { color: var(--danger); }
+.person-refresh-btn:hover { color: var(--accent-2); }
+
+.compare-add-btn {
+  flex: 1 0 120px;
+  min-width: 100px;
+  max-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--panel);
+  border: 1.5px dashed var(--border-solid);
+  border-radius: var(--radius);
+  padding: 20px 10px;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.compare-add-btn span { font-size: 28px; line-height: 1; color: var(--accent); }
+.compare-add-btn:hover { border-color: var(--accent); color: var(--text); }
+
+/* Legend */
+.compare-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.compare-legend-item { display: flex; align-items: center; gap: 6px; }
+
+/* Sprite grid */
+.compare-grid { display: flex; flex-direction: column; gap: 20px; }
+
+.compare-species {
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.compare-species-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
+.compare-species-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+.compare-species-counts { display: flex; gap: 8px; font-size: 12px; font-weight: 600; }
+.compare-species.rarity-common .compare-species-name  { color: var(--common); }
+.compare-species.rarity-rare .compare-species-name    { color: var(--rare); }
+.compare-species.rarity-epic .compare-species-name    { color: var(--epic); }
+.compare-species.rarity-legendary .compare-species-name { color: var(--legendary); }
+.compare-species.rarity-mythic .compare-species-name  { color: var(--mythic); }
+
+.compare-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+}
+
+.compare-chip {
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.compare-chip-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+.compare-chip-ph {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+}
+
+.compare-chip-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Dots row below each chip */
+.compare-dots {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.compare-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--panel-2);
+  border: 1.5px solid var(--border-solid);
+  font-size: 8px;
+  line-height: 11px;
+  text-align: center;
+  color: transparent;
+  transition: background .15s, border-color .15s;
+}
+.compare-dot--owned {
+  background: var(--dot-color, var(--accent));
+  border-color: var(--dot-color, var(--accent));
+}
+.compare-dot--mastered {
+  background: var(--dot-color, var(--accent));
+  border-color: var(--dot-color, var(--accent));
+  color: #fff;
+}
+
+/* Empty state */
+.compare-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.compare-empty h3 { font-size: 18px; margin: 0 0 8px; color: var(--text); }
+
+/* field-label */
+.field-label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 480px) {

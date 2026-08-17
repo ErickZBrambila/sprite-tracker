@@ -23,6 +23,7 @@
   <nav class="view-switch" id="viewSwitch">
     <button type="button" class="view-switch-btn active" data-view="checklist">Checklist</button>
     <button type="button" class="view-switch-btn" data-view="dashboard">Dashboard</button>
+    <button type="button" class="view-switch-btn" data-view="compare">Compare</button>
   </nav>
 
   <div class="topbar-actions">
@@ -45,6 +46,7 @@
 
 <main id="checklistView" class="view"></main>
 <main id="dashboardView" class="view" hidden></main>
+<main id="compareView" class="view" hidden></main>
 
 <div id="toast" class="toast" hidden></div>
 
@@ -83,6 +85,25 @@
 
     <div class="modal-actions" style="margin-top:16px">
       <button type="button" id="syncCloseBtn" class="btn-ghost">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="addFriendModal" class="modal-backdrop" hidden>
+  <div class="modal">
+    <h3>Add a friend</h3>
+    <p class="sync-hint">Enter their sync code to compare your collections.</p>
+    <div class="sync-section">
+      <label class="field-label" for="friendCodeInput">Sync code</label>
+      <input type="text" id="friendCodeInput" placeholder="e.g. swift-otter-42" autocomplete="off" spellcheck="false" />
+    </div>
+    <div class="sync-section">
+      <label class="field-label" for="friendNameInput">Nickname (optional)</label>
+      <input type="text" id="friendNameInput" placeholder="e.g. Diego" maxlength="20" autocomplete="off" />
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="addFriendCancelBtn" class="btn-ghost">Cancel</button>
+      <button type="button" id="addFriendConfirmBtn" class="btn-primary">Add</button>
     </div>
   </div>
 </div>

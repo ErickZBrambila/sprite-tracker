@@ -217,10 +217,74 @@ const SpriteStore = (function () {
     return { ok: true };
   }
 
+  // ---- Friends ----
+
+  const FRIENDS_KEY = 'sprite-tracker:friends';
+
+  function getFriends() {
+    try { return JSON.parse(localStorage.getItem(FRIENDS_KEY) || '[]'); } catch { return []; }
+  }
+  function _saveFriends(f) { localStorage.setItem(FRIENDS_KEY, JSON.stringify(f)); }
+
+  function _foldEvents(events) {
+    const s = {};
+    for (const ev of events) s[ev.id] = { owned: ev.owned, mastered: ev.mastered };
+    return s;
+  }
+
+  async function _fetchFriendState(deviceId) {
+    const res = await fetch(`/api/devices/${deviceId}/events`);
+    if (!res.ok) return null;
+    const { events } = await res.json();
+    return _foldEvents(events);
+  }
+
+  async function addFriend(code, name) {
+    const friends = getFriends();
+    if (friends.length >= 4) return { ok: false, error: 'Maximum 4 friends.' };
+    const norm = code.trim().toLowerCase();
+    if (friends.some(f => f.code === norm)) return { ok: false, error: 'Already added.' };
+
+    let res;
+    try { res = await fetch(`/api/devices/lookup/${encodeURIComponent(norm)}`); }
+    catch { return { ok: false, error: 'Could not reach the server.' }; }
+    if (res.status === 404) return { ok: false, error: 'Sync code not found.' };
+    if (!res.ok) return { ok: false, error: 'Something went wrong.' };
+
+    const { deviceId } = await res.json();
+    let state;
+    try { state = await _fetchFriendState(deviceId); }
+    catch { return { ok: false, error: 'Could not load friend data.' }; }
+    if (!state) return { ok: false, error: 'Could not load friend data.' };
+
+    friends.push({ code: norm, deviceId, name: (name.trim() || norm).slice(0, 20), state, fetchedAt: new Date().toISOString() });
+    _saveFriends(friends);
+    return { ok: true };
+  }
+
+  async function refreshFriend(code) {
+    const friends = getFriends();
+    const f = friends.find(f => f.code === code.toLowerCase());
+    if (!f) return { ok: false, error: 'Friend not found.' };
+    try {
+      const state = await _fetchFriendState(f.deviceId);
+      if (!state) return { ok: false, error: 'Could not reach the server.' };
+      f.state = state;
+      f.fetchedAt = new Date().toISOString();
+      _saveFriends(friends);
+      return { ok: true };
+    } catch { return { ok: false, error: 'Could not reach the server.' }; }
+  }
+
+  function removeFriend(code) {
+    _saveFriends(getFriends().filter(f => f.code !== code.toLowerCase()));
+  }
+
   return {
     getEvents, getCurrentState, stateOf, toggle,
     getTimeline, getRecentActivity,
     exportData, importData, clearAll,
     init, connectDevice, getRecoveryCode,
+    getFriends, addFriend, refreshFriend, removeFriend,
   };
 })();
