@@ -1,0 +1,11 @@
+{
+  "name": "sprite-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
