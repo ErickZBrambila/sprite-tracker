@@ -145,9 +145,16 @@ button:active { transform: scale(0.97); }
   border-radius: 20px;
   border: 1px solid var(--border-solid);
   min-width: 148px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  cursor: pointer;
+  user-select: none;
 }
 .stat-card:hover { transform: translateY(-2px); }
+.stat-card:active { transform: scale(0.97); }
+
+.stat-card--inverted { background: linear-gradient(145deg, rgba(30,18,38,0.95), rgba(20,12,28,0.9)); }
+.stat-card--collected.stat-card--inverted { box-shadow: 0 0 0 1px rgba(139,108,255,0.5), 0 8px 32px rgba(139,108,255,0.3), inset 0 1px 0 rgba(139,108,255,0.2); }
+.stat-card--mastered.stat-card--inverted  { box-shadow: 0 0 0 1px rgba(255,217,90,0.45), 0 8px 32px rgba(255,217,90,0.25), inset 0 1px 0 rgba(255,217,90,0.18); }
 
 .stat-card--collected {
   box-shadow:

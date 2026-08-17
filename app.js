@@ -34,14 +34,29 @@ let toastTimer = null;
 const RING_R = 38;
 const RING_CIRC = 2 * Math.PI * RING_R;
 
+// Collected card toggles: owned ↔ missing
+// Mastered card toggles:  mastered ↔ needsMastery
+const CARD_TOGGLES = {
+  collected: { a: 'owned',   b: 'missing' },
+  mastered:  { a: 'mastered', b: 'needsMastery' },
+};
+
 function buildStatHeadline(ownedCount, masteredCount) {
-  function ringCard(count, mod, label) {
-    const pct = count / TOTAL;
+  function ringCard(count, mod, labelA, labelB) {
+    const activeView = filters.view;
+    const toggle = CARD_TOGGLES[mod];
+    const isInverted = activeView === toggle.b;
+    const displayCount = isInverted ? (TOTAL - count) : count;
+    const displayLabel = isInverted ? labelB : labelA;
+    const pct = displayCount / TOTAL;
     const pctLabel = Math.round(pct * 100) + '%';
     const offset = (RING_CIRC * (1 - pct)).toFixed(2);
-    const el = document.createElement('div');
-    el.className = `stat-card stat-card--${mod}`;
-    el.innerHTML = `
+
+    const card = document.createElement('div');
+    card.className = `stat-card stat-card--${mod}${isInverted ? ' stat-card--inverted' : ''}`;
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.innerHTML = `
       <div class="stat-ring-wrap">
         <svg class="stat-ring" viewBox="0 0 100 100" aria-hidden="true">
           <circle class="stat-ring-bg" cx="50" cy="50" r="${RING_R}"/>
@@ -51,20 +66,31 @@ function buildStatHeadline(ownedCount, masteredCount) {
             data-target-offset="${offset}"/>
         </svg>
         <div class="stat-overlay">
-          <span class="stat-num">${count}</span>
+          <span class="stat-num">${displayCount}</span>
           <span class="stat-denom">/${TOTAL}</span>
           <span class="stat-pct">${pctLabel}</span>
         </div>
       </div>
-      <div class="stat-card-label">${label}</div>
+      <div class="stat-card-label">${displayLabel}</div>
     `;
-    return el;
+
+    function onToggle() {
+      if (filters.view === toggle.b) {
+        filters.view = 'all';
+      } else {
+        filters.view = toggle.b;
+      }
+      renderChecklist();
+    }
+    card.addEventListener('click', onToggle);
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') onToggle(); });
+    return card;
   }
 
   const headline = document.createElement('div');
   headline.className = 'sprite-headline';
-  headline.appendChild(ringCard(ownedCount, 'collected', 'Collected'));
-  headline.appendChild(ringCard(masteredCount, 'mastered', 'Mastered'));
+  headline.appendChild(ringCard(ownedCount, 'collected', 'Collected', 'Missing'));
+  headline.appendChild(ringCard(masteredCount, 'mastered', 'Mastered', 'Needs Mastery'));
 
   // Animate rings after they're in the DOM
   requestAnimationFrame(() => requestAnimationFrame(() => {
