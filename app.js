@@ -16,7 +16,8 @@ const viewSwitchEl = el('viewSwitch');
 const exportBtn = el('exportBtn');
 const importBtn = el('importBtn');
 const importFile = el('importFile');
-const resetBtn = el('resetBtn');
+const resetBtn  = el('resetBtn');
+const helpBtn   = el('helpBtn');
 const toastEl = el('toast');
 const confirmModal = el('confirmModal');
 const confirmCancel = el('confirmCancel');
@@ -163,6 +164,9 @@ viewSwitchEl.addEventListener('click', (e) => {
   compareViewEl.hidden   = currentView !== 'compare';
   render();
 });
+
+// ---- Help / Tour ----
+helpBtn.addEventListener('click', () => { if (window.startTour) window.startTour(); });
 
 // ---- Export / Import / Reset ----
 exportBtn.addEventListener('click', () => {
