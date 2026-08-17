@@ -23,7 +23,9 @@
       body: 'Tap any Sprite once to mark it <strong>owned ✓</strong>, again for <strong>mastered ★</strong>, once more to clear. Progress saves instantly.',
     },
     {
+      before: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
       target: () => document.querySelector('.stat-card'),
+      scroll: true,
       title: 'Progress rings',
       body: 'Tap a ring to filter the checklist — jump straight to what\'s <em>Missing</em> or <em>Needs Mastery</em>.',
     },
