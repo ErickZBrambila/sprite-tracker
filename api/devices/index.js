@@ -1,11 +1,11 @@
 const { randomUUID } = require('crypto');
-const { sql, ensureSchema } = require('../_db');
+const getDb = require('../_db');
 const { recoveryCode } = require('../../server/words');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  await ensureSchema();
+  const sql = getDb();
   const id = randomUUID();
   const now = new Date().toISOString();
 

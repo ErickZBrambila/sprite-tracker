@@ -1,16 +1,16 @@
-const { sql, createClient, ensureSchema } = require('../../_db');
+const getDb = require('../../_db');
 
 module.exports.config = { api: { bodyParser: { sizeLimit: '2mb' } } };
 
 module.exports = async function handler(req, res) {
-  await ensureSchema();
+  const sql = getDb();
   const { deviceId } = req.query;
 
-  const { rows: found } = await sql`SELECT 1 FROM devices WHERE id = ${deviceId}`;
-  if (!found.length) return res.status(404).json({ error: 'Device not found.' });
+  const [device] = await sql`SELECT 1 FROM devices WHERE id = ${deviceId}`;
+  if (!device) return res.status(404).json({ error: 'Device not found.' });
 
   if (req.method === 'GET') {
-    const { rows } = await sql`
+    const rows = await sql`
       SELECT sprite_id AS id, owned, mastered, at
       FROM events WHERE device_id = ${deviceId} ORDER BY seq ASC
     `;
@@ -30,25 +30,21 @@ module.exports = async function handler(req, res) {
       && typeof e.at === 'string'      && !isNaN(Date.parse(e.at))
     );
 
-    const client = createClient();
-    await client.connect();
     let inserted = 0;
-    try {
-      await client.query('BEGIN');
-      for (const e of valid) {
-        const result = await client.query(
-          `INSERT INTO events (device_id, sprite_id, owned, mastered, at)
-           VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`,
-          [deviceId, e.id, e.owned, e.mastered, e.at]
-        );
-        inserted += result.rowCount;
-      }
-      await client.query('COMMIT');
-    } catch (e) {
-      await client.query('ROLLBACK');
-      throw e;
-    } finally {
-      await client.end();
+    if (valid.length > 0) {
+      // Single-query batch via unnest — one round trip regardless of event count.
+      const ids       = valid.map(e => e.id);
+      const owneds    = valid.map(e => e.owned);
+      const mastereds = valid.map(e => e.mastered);
+      const ats       = valid.map(e => e.at);
+      const rows = await sql`
+        INSERT INTO events (device_id, sprite_id, owned, mastered, at)
+        SELECT ${deviceId}, unnest(${ids}::text[]), unnest(${owneds}::boolean[]),
+               unnest(${mastereds}::boolean[]), unnest(${ats}::text[])
+        ON CONFLICT DO NOTHING
+        RETURNING 1
+      `;
+      inserted = rows.length;
     }
 
     return res.json({ inserted });
