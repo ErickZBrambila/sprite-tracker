@@ -48,7 +48,7 @@
     ['Seven', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Enemy footprints visible to your squad.'],
     ['Peeky Peely', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Pings nearby rare Sprites (also marks you on the map).'],
     ["Lootin' Llama", 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Opening ammo boxes can grant a weapon upgrade.'],
-    ['Zero Point', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Quack', 'Gem'], 'Spawns a Shield Bubble Jr. when you use a healing item.'],
+    ['Zero Point', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack', 'Gem'], 'Spawns a Shield Bubble Jr. when you use a healing item.'],
     ['Burnt Peanut', 'mythic', [], 'Eliminations may drop extra loot, sometimes Mythic.'],
     ['Grim', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Gem'], 'Marks an enemy as soon as they damage you.'],
     ['Batman', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube'], 'Launch into the air and deploy the Bat Cape.'],
@@ -112,7 +112,7 @@
 
     'ghost-base': 'https://static.beebom.com/wp-content/uploads/2024/12/Fortnite-Ghost-Sprite.jpg',
     'ghost-gold': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-10_174720957.png',
-    'ghost-gummy': 'https://static.beebom.com/wp-content/uploads/2026/06/Fortnite-Gummy-Zero-Point-Sprite.jpg',
+    'ghost-gummy': 'https://static.beebom.com/wp-content/uploads/2026/06/Fortnite-Gummy-Ghost-Sprite.jpg',
     'ghost-galaxy': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-15_134115092.png',
     'ghost-holofoil': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-15_051958615.png',
 
@@ -172,9 +172,11 @@
     'lootin-llama-gem': 'https://static.beebom.com/wp-content/uploads/2026/08/Gem-Llama-Sprite.webp',
 
     'zero-point-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-15_150552601.png',
+    'zero-point-holofoil': 'https://fortnite-sprites.com/sprites/zeropoint_holofoil.png',
     'zero-point-gold': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-10_174939463.png',
     'zero-point-gummy': 'https://static.beebom.com/wp-content/uploads/2026/06/Fortnite-Gummy-Zero-Point-Sprite.jpg',
     'zero-point-galaxy': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-15_150415645.png',
+    'zero-point-cube': 'https://fortnitesprite.com/sprites/cube-zero-point-sprite.png',
     'zero-point-quack': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-31_155730855.png',
     'zero-point-gem': 'https://static.beebom.com/wp-content/uploads/2026/06/Zero-Point-Gem-Sprite.jpg.webp',
 
@@ -198,8 +200,7 @@
     'vini-jr-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-17_060648754.png',
     'pollo-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-21_175447126.png',
     'john-wick-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-31_020521147.png',
-    // No image found in the source guides for Ironmouse yet (it's very recently added) - the
-    // app falls back to a plain rarity-colored tile when `icon` is null.
+    'ironmouse-base': 'https://static.beebom.com/wp-content/uploads/2026/07/Ironmouse-Sprite-In-Fortnite-e1785411834897.jpg',
   };
 
   function slugify(s) {

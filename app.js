@@ -1,5 +1,14 @@
 const el = (id) => document.getElementById(id);
 
+// Detect phone / tablet / desktop and stamp data-device on <html> so CSS can respond.
+function setDeviceType() {
+  const isTouch = navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches;
+  const w = window.innerWidth;
+  document.documentElement.dataset.device = !isTouch ? 'desktop' : w <= 640 ? 'phone' : 'tablet';
+}
+setDeviceType();
+window.addEventListener('resize', setDeviceType);
+
 const checklistViewEl = el('checklistView');
 const dashboardViewEl = el('dashboardView');
 const viewSwitchEl = el('viewSwitch');
@@ -20,6 +29,52 @@ const VARIANT_TYPES = ['Base', 'Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Q
 
 let currentView = 'checklist';
 let toastTimer = null;
+
+// ---- Stat ring cards ----
+const RING_R = 38;
+const RING_CIRC = 2 * Math.PI * RING_R;
+
+function buildStatHeadline(ownedCount, masteredCount) {
+  function ringCard(count, mod, label) {
+    const pct = count / TOTAL;
+    const pctLabel = Math.round(pct * 100) + '%';
+    const offset = (RING_CIRC * (1 - pct)).toFixed(2);
+    const el = document.createElement('div');
+    el.className = `stat-card stat-card--${mod}`;
+    el.innerHTML = `
+      <div class="stat-ring-wrap">
+        <svg class="stat-ring" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="stat-ring-bg" cx="50" cy="50" r="${RING_R}"/>
+          <circle class="stat-ring-fill stat-ring-fill--${mod}" cx="50" cy="50" r="${RING_R}"
+            stroke-dasharray="${RING_CIRC.toFixed(2)}"
+            stroke-dashoffset="${RING_CIRC.toFixed(2)}"
+            data-target-offset="${offset}"/>
+        </svg>
+        <div class="stat-overlay">
+          <span class="stat-num">${count}</span>
+          <span class="stat-denom">/${TOTAL}</span>
+          <span class="stat-pct">${pctLabel}</span>
+        </div>
+      </div>
+      <div class="stat-card-label">${label}</div>
+    `;
+    return el;
+  }
+
+  const headline = document.createElement('div');
+  headline.className = 'sprite-headline';
+  headline.appendChild(ringCard(ownedCount, 'collected', 'Collected'));
+  headline.appendChild(ringCard(masteredCount, 'mastered', 'Mastered'));
+
+  // Animate rings after they're in the DOM
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    headline.querySelectorAll('.stat-ring-fill[data-target-offset]').forEach(circle => {
+      circle.style.strokeDashoffset = circle.dataset.targetOffset;
+    });
+  }));
+
+  return headline;
+}
 
 // ---- Filters (checklist view) ----
 let filters = {
@@ -134,13 +189,7 @@ function renderChecklist() {
   const ownedCount = CATALOG.filter((s) => state[s.id]?.owned).length;
   const masteredCount = CATALOG.filter((s) => state[s.id]?.mastered).length;
 
-  const headline = document.createElement('div');
-  headline.className = 'sprite-headline';
-  headline.innerHTML = `
-    <div class="sprite-stat"><div class="sprite-stat-count">${ownedCount}<span class="sprite-stat-total">/${TOTAL}</span></div><div class="sprite-stat-label">Collected</div></div>
-    <div class="sprite-stat"><div class="sprite-stat-count">${masteredCount}<span class="sprite-stat-total">/${TOTAL}</span></div><div class="sprite-stat-label">Mastered</div></div>
-  `;
-  wrap.appendChild(headline);
+  wrap.appendChild(buildStatHeadline(ownedCount, masteredCount));
 
   // ---- Toolbar ----
   const toolbar = document.createElement('div');
@@ -388,13 +437,7 @@ function renderDashboard() {
   const ownedCount = CATALOG.filter((s) => state[s.id]?.owned).length;
   const masteredCount = CATALOG.filter((s) => state[s.id]?.mastered).length;
 
-  const headline = document.createElement('div');
-  headline.className = 'sprite-headline';
-  headline.innerHTML = `
-    <div class="sprite-stat"><div class="sprite-stat-count">${ownedCount}<span class="sprite-stat-total">/${TOTAL}</span></div><div class="sprite-stat-label">Collected · ${Math.round((ownedCount / TOTAL) * 100)}%</div></div>
-    <div class="sprite-stat"><div class="sprite-stat-count">${masteredCount}<span class="sprite-stat-total">/${TOTAL}</span></div><div class="sprite-stat-label">Mastered · ${Math.round((masteredCount / TOTAL) * 100)}%</div></div>
-  `;
-  wrap.appendChild(headline);
+  wrap.appendChild(buildStatHeadline(ownedCount, masteredCount));
 
   // ---- Progress over time ----
   const section1 = document.createElement('section');
@@ -500,18 +543,53 @@ const syncCodeDisplay = el('syncCodeDisplay');
 const syncCopyBtn     = el('syncCopyBtn');
 const syncCodeInput   = el('syncCodeInput');
 const syncConnectBtn  = el('syncConnectBtn');
+const usernameInput   = el('usernameInput');
+const usernameSaveBtn = el('usernameSaveBtn');
+
+const USERNAME_KEY = 'sprite-tracker:username';
+
+function getUsername() {
+  return localStorage.getItem(USERNAME_KEY) || null;
+}
+
+function setUsername(name) {
+  const trimmed = name.trim().slice(0, 32);
+  if (trimmed) {
+    localStorage.setItem(USERNAME_KEY, trimmed);
+  } else {
+    localStorage.removeItem(USERNAME_KEY);
+  }
+  return trimmed;
+}
+
+function updateHeaderChip() {
+  const username = getUsername();
+  const code = SpriteStore.getRecoveryCode();
+  syncCodeChip.textContent = username || code || '···';
+}
 
 function updateCodeDisplays(code) {
   if (!code) return;
-  syncCodeChip.textContent = code;
   syncCodeDisplay.textContent = code;
+  updateHeaderChip();
 }
 
 function openSyncModal() {
   syncCodeDisplay.textContent = SpriteStore.getRecoveryCode() || 'connecting…';
+  usernameInput.value = getUsername() || '';
   syncCodeInput.value = '';
   syncModal.hidden = false;
 }
+
+usernameSaveBtn.addEventListener('click', () => {
+  const saved = setUsername(usernameInput.value);
+  updateHeaderChip();
+  showToast(saved ? `Display name set to "${saved}"` : 'Display name cleared');
+});
+
+usernameInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') usernameSaveBtn.click();
+});
 
 syncBtn.addEventListener('click', openSyncModal);
 syncCloseBtn.addEventListener('click', () => { syncModal.hidden = true; });
@@ -543,7 +621,8 @@ syncConnectBtn.addEventListener('click', async () => {
   }
 });
 
-// Show code immediately if we already have it (returning visitor), then sync.
+// Show code/username immediately if we already have it (returning visitor), then sync.
+updateHeaderChip();
 updateCodeDisplays(SpriteStore.getRecoveryCode());
 SpriteStore.init().then(({ changed }) => {
   if (changed) render();

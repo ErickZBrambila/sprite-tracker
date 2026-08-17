@@ -53,6 +53,16 @@
     <h3>Sync across devices</h3>
 
     <div class="sync-section">
+      <p class="sync-hint">Display name — shown in the header and easy to remember.</p>
+      <div class="sync-username-row">
+        <input type="text" id="usernameInput" placeholder="Your name" maxlength="32" autocomplete="off" spellcheck="false" />
+        <button type="button" id="usernameSaveBtn" class="btn-primary">Save</button>
+      </div>
+    </div>
+
+    <hr class="sync-divider" />
+
+    <div class="sync-section">
       <p class="sync-hint">Your sync code — save it to access your checklist from any browser or device.</p>
       <div class="sync-code-box">
         <span class="sync-code-value" id="syncCodeDisplay">connecting&hellip;</span>

@@ -1,17 +1,26 @@
 const express = require('express');
 const path = require('path');
 const { randomUUID } = require('crypto');
+const helmet = require('helmet');
+const { rateLimit } = require('express-rate-limit');
 const { getDb } = require('./db');
 const { recoveryCode } = require('./words');
 
 const app = express();
+
+// Security headers
+app.use(helmet({ contentSecurityPolicy: false })); // CSP off: fonts/images load from google/beebom
+
 app.use(express.json({ limit: '2mb' }));
 
 // Serve the static app from the project root — same-origin, no CORS needed.
 app.use(express.static(path.join(__dirname, '..')));
 
+// Rate-limit device registration — prevents table-filling abuse
+const registerLimit = rateLimit({ windowMs: 60 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
+
 // POST /api/devices — register a new anonymous device
-app.post('/api/devices', (req, res) => {
+app.post('/api/devices', registerLimit, (req, res) => {
   const db = getDb();
   const id = randomUUID();
   const now = new Date().toISOString();
@@ -64,9 +73,14 @@ app.post('/api/devices/:deviceId/events', (req, res) => {
     return res.status(404).json({ error: 'Device not found.' });
   }
 
+  if (events.length > 50000) return res.status(400).json({ error: 'Too many events.' });
+
   const valid = events.filter(
-    e => e && typeof e.id === 'string' && typeof e.owned === 'boolean'
-      && typeof e.mastered === 'boolean' && typeof e.at === 'string'
+    e => e
+      && typeof e.id === 'string'     && e.id.length <= 64
+      && typeof e.owned === 'boolean'
+      && typeof e.mastered === 'boolean'
+      && typeof e.at === 'string'     && !isNaN(Date.parse(e.at))
   );
 
   const insert = db.prepare(
