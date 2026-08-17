@@ -553,12 +553,41 @@ button:active { transform: scale(0.97); }
   box-shadow: 0 0 18px -8px var(--person-color, var(--accent));
 }
 
+.person-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
 .person-name {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 15px;
   font-weight: 700;
   color: var(--person-color, var(--accent));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.person-you-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--person-color, var(--accent));
+  background: color-mix(in srgb, var(--person-color, var(--accent)) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--person-color, var(--accent)) 40%, transparent);
+  border-radius: 999px;
+  padding: 1px 6px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.person-code {
+  font-size: 10px;
+  color: var(--muted);
   margin-bottom: 10px;
+  font-family: monospace;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

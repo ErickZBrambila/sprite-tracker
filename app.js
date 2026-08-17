@@ -569,9 +569,14 @@ function makePersonCard(name, owned, mastered, color, isYou, friendCode) {
 
   const ownedPct  = Math.round(owned / TOTAL * 100);
   const mastPct   = Math.round(mastered / TOTAL * 100);
+  const code      = isYou ? SpriteStore.getRecoveryCode() : friendCode;
 
   card.innerHTML = `
-    <div class="person-name">${name}</div>
+    <div class="person-name-row">
+      <span class="person-name">${name}</span>
+      ${isYou ? '<span class="person-you-badge">You</span>' : ''}
+    </div>
+    ${code ? `<div class="person-code">${code}</div>` : ''}
     <div class="person-stats">
       <div class="person-stat"><span class="person-stat-num">${owned}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Collected</div></div>
       <div class="person-stat"><span class="person-stat-num">${mastered}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Mastered</div></div>
