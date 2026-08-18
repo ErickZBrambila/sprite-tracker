@@ -128,8 +128,29 @@ const SpriteStore = (function () {
 
   // ---- Server sync ----
 
+  const ALIAS_KEY = 'sprite-tracker:alias';
+
   function getDeviceId()     { return localStorage.getItem(DEVICE_KEY); }
-  function getRecoveryCode() { return localStorage.getItem(CODE_KEY); }
+  function getRecoveryCode() { return localStorage.getItem(ALIAS_KEY) || localStorage.getItem(CODE_KEY); }
+
+  async function setAlias(username) {
+    const deviceId = getDeviceId();
+    if (!deviceId) return { ok: false, error: 'Not connected to server yet.' };
+    const norm = username.trim().toLowerCase().slice(0, 32);
+    try {
+      const res = await fetch(`/api/devices/${deviceId}/alias`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ alias: norm }),
+      });
+      const data = await res.json();
+      if (!res.ok) return { ok: false, error: data.error || 'Could not set username.' };
+      localStorage.setItem(ALIAS_KEY, data.alias);
+      return { ok: true, alias: data.alias };
+    } catch {
+      return { ok: false, error: 'Could not reach the server.' };
+    }
+  }
 
   async function _pushEvents(events) {
     const deviceId = getDeviceId();
@@ -284,7 +305,7 @@ const SpriteStore = (function () {
     getEvents, getCurrentState, stateOf, toggle,
     getTimeline, getRecentActivity,
     exportData, importData, clearAll,
-    init, connectDevice, getRecoveryCode,
+    init, connectDevice, getRecoveryCode, setAlias,
     getFriends, addFriend, refreshFriend, removeFriend,
   };
 })();

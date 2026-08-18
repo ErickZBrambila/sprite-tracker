@@ -812,10 +812,24 @@ function openSyncModal() {
   syncModal.hidden = false;
 }
 
-usernameSaveBtn.addEventListener('click', () => {
+usernameSaveBtn.addEventListener('click', async () => {
   const saved = setUsername(usernameInput.value);
   updateHeaderChip();
-  showToast(saved ? `Display name set to "${saved}"` : 'Display name cleared');
+  if (saved) {
+    usernameSaveBtn.disabled = true;
+    usernameSaveBtn.textContent = 'Saving…';
+    const result = await SpriteStore.setAlias(saved);
+    usernameSaveBtn.disabled = false;
+    usernameSaveBtn.textContent = 'Save';
+    updateCodeDisplays();
+    if (result.ok) {
+      showToast(`Username set — friends can find you as "${result.alias}"`);
+    } else {
+      showToast(`Name saved locally. ${result.error}`, 'error');
+    }
+  } else {
+    showToast('Display name cleared');
+  }
 });
 
 usernameInput.addEventListener('keydown', (e) => {
