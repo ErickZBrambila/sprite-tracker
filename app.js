@@ -821,7 +821,7 @@ usernameSaveBtn.addEventListener('click', async () => {
     const result = await SpriteStore.setAlias(saved);
     usernameSaveBtn.disabled = false;
     usernameSaveBtn.textContent = 'Save';
-    updateCodeDisplays();
+    updateCodeDisplays(SpriteStore.getRecoveryCode());
     if (result.ok) {
       showToast(`Username set — friends can find you as "${result.alias}"`);
     } else {
