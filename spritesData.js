@@ -43,7 +43,7 @@
     ['King', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Massive pickaxe damage multiplier.'],
     ['Aura', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Grants a Shock Rock charge after dealing enough damage.'],
     ['Dream', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Random item on level up; Legendary loot burst at max level.'],
-    ['Punk', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube', 'Gem'], 'Chance of an infinite ammo buff.'],
+    ['Punk', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Chance of an infinite ammo buff.'],
     ['Boss', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts both health and shields.'],
     ['Seven', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Enemy footprints visible to your squad.'],
     ['Peeky Peely', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Pings nearby rare Sprites (also marks you on the map).'],
@@ -145,7 +145,6 @@
     'punk-gummy': 'https://static.beebom.com/wp-content/uploads/2026/06/Fortnite-Gummy-Punk-Sprite.jpg',
     'punk-galaxy': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-15_150206001.png',
     'punk-cube': 'https://static.beebom.com/wp-content/uploads/2026/07/image_2026-07-23_171310899.png',
-    'punk-gem': 'https://static.beebom.com/wp-content/uploads/2026/08/Gem-Punk-Sprite.webp',
 
     'boss-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-26_035246836.png',
     'boss-gold': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-06-26_035309466.png',
