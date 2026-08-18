@@ -70,6 +70,11 @@
       <div class="sync-code-box">
         <span class="sync-code-value" id="syncCodeDisplay">connecting&hellip;</span>
         <button type="button" class="btn-copy" id="syncCopyBtn">Copy</button>
+        <button type="button" class="btn-copy" id="syncQrBtn" title="Show QR code">QR</button>
+      </div>
+      <div id="syncQrPanel" class="qr-panel" hidden>
+        <div id="syncQrCanvas" class="qr-canvas-wrap"></div>
+        <p class="qr-hint">Scan with another device to connect your collection</p>
       </div>
     </div>
 
@@ -129,6 +134,7 @@
   </p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="spritesData.js"></script>
 <script src="store.js"></script>
 <script src="app.js"></script>
