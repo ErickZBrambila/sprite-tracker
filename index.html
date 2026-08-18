@@ -24,6 +24,7 @@
     <button type="button" class="view-switch-btn active" data-view="checklist">Checklist</button>
     <button type="button" class="view-switch-btn" data-view="dashboard">Dashboard</button>
     <button type="button" class="view-switch-btn" data-view="compare">Compare</button>
+    <button type="button" class="view-switch-btn" data-view="wiki">Wiki</button>
   </nav>
 
   <div class="topbar-actions">
@@ -48,6 +49,14 @@
 <main id="checklistView" class="view"></main>
 <main id="dashboardView" class="view" hidden></main>
 <main id="compareView" class="view" hidden></main>
+<main id="wikiView" class="view" hidden></main>
+
+<div id="wikiDetailModal" class="modal-backdrop wiki-detail-backdrop" hidden>
+  <div class="modal wiki-detail-modal">
+    <button id="wikiDetailClose" class="wiki-close-btn" title="Close">✕</button>
+    <div id="wikiDetailContent"></div>
+  </div>
+</div>
 
 <div id="toast" class="toast" hidden></div>
 

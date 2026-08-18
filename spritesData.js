@@ -24,38 +24,52 @@
     root.SpritesData = mod;
   }
 })(typeof self !== 'undefined' ? self : this, function () {
-  // species: [displayName, rarity, [variant list beyond Base], ability]
+  // species: [displayName, rarity, [variant list beyond Base], ability, season]
+  // season values: 'ch6s1' | 'ch7s3' | 'ch7s4'
+  //   ch6s1 — original sprites, introduced Chapter 6 Season 1 (Dec 2024)
+  //   ch7s3 — new/returning sprites added during Chapter 7 Season 3 "Runners" (Jun–Aug 2026)
+  //   ch7s4 — upcoming Chapter 7 Season 4 "Override" (Aug 20 2026+); not yet trackable
   //
   // Gem is Epic's newest variant type (added "New Sprite Day" Aug 6 2026). Per Beebom's
   // dedicated Gem Sprites article, there are exactly 9 Gem variants: Water, Earth, Duck,
   // Demon, Punk, Zero Point, Aura, Grim, and Llama - it's deliberately not on every species,
   // same as Holofoil/Cube/Quack before it.
   const SPECIES = [
-    ['Earth', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube', 'Quack', 'Gem'], 'Higher chance to pull rare items/weapons from chests.'],
-    ['Air', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Increases sprint speed and jump height; nullifies fall damage.'],
-    ['Fire', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack'], 'Triggers a fiery burst after dealing enough damage to an enemy.'],
-    ['Water', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Quack', 'Gem'], 'Slowly replenishes shields for you and nearby squadmates while in water.'],
-    ['Fishy', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts swim speed; movement boost after taking damage.'],
-    ['Duck', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Emoting/Jamming anywhere replenishes shields.'],
-    ['Striker', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Overdrive effect when mantling or hurdling.'],
-    ['Ghost', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Brief cloak (invisibility) immediately upon reloading.'],
-    ['Demon', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Siphon: restores health/shield on elimination.'],
-    ['King', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Massive pickaxe damage multiplier.'],
-    ['Aura', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Grants a Shock Rock charge after dealing enough damage.'],
-    ['Dream', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Random item on level up; Legendary loot burst at max level.'],
-    ['Punk', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Chance of an infinite ammo buff.'],
-    ['Boss', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts both health and shields.'],
-    ['Seven', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Enemy footprints visible to your squad.'],
-    ['Peeky Peely', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Pings nearby rare Sprites (also marks you on the map).'],
-    ["Lootin' Llama", 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Opening ammo boxes can grant a weapon upgrade.'],
-    ['Zero Point', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack', 'Gem'], 'Spawns a Shield Bubble Jr. when you use a healing item.'],
-    ['Burnt Peanut', 'mythic', [], 'Eliminations may drop extra loot, sometimes Mythic.'],
-    ['Grim', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Gem'], 'Marks an enemy as soon as they damage you.'],
-    ['Batman', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube'], 'Launch into the air and deploy the Bat Cape.'],
-    ['Vini Jr.', 'mythic', [], 'Destructive sprint-slides; slidekicks boost fire rate and reload speed.'],
-    ['Pollo', 'mythic', [], 'Eliminations slowly regenerate your shield and nearby squadmates’.'],
-    ['John Wick', 'mythic', [], 'Knocking a player reveals other nearby enemies.'],
-    ['Ironmouse', 'mythic', [], 'Regenerates health when low; grants Cloak and low gravity while regenerating.'],
+    // -- Ch6 Season 1 originals ---------------------------------------------
+    ['Earth', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube', 'Quack', 'Gem'], 'Higher chance to pull rare items/weapons from chests.', 'ch6s1'],
+    ['Air', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Increases sprint speed and jump height; nullifies fall damage.', 'ch7s3'],
+    ['Fire', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack'], 'Triggers a fiery burst after dealing enough damage to an enemy.', 'ch6s1'],
+    ['Water', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Quack', 'Gem'], 'Slowly replenishes shields for you and nearby squadmates while in water.', 'ch6s1'],
+    ['Fishy', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts swim speed; movement boost after taking damage.', 'ch7s3'],
+    ['Duck', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Emoting/Jamming anywhere replenishes shields.', 'ch6s1'],
+    ['Striker', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Overdrive effect when mantling or hurdling.', 'ch7s3'],
+    ['Ghost', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Brief cloak (invisibility) immediately upon reloading.', 'ch6s1'],
+    ['Demon', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Siphon: restores health/shield on elimination.', 'ch6s1'],
+    ['King', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Massive pickaxe damage multiplier.', 'ch6s1'],
+    ['Aura', 'epic', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Grants a Shock Rock charge after dealing enough damage.', 'ch7s3'],
+    ['Dream', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Random item on level up; Legendary loot burst at max level.', 'ch6s1'],
+    ['Punk', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Chance of an infinite ammo buff.', 'ch6s1'],
+    ['Boss', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts both health and shields.', 'ch7s3'],
+    ['Seven', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Enemy footprints visible to your squad.', 'ch7s3'],
+    ['Peeky Peely', 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Pings nearby rare Sprites (also marks you on the map).', 'ch7s3'],
+    ["Lootin' Llama", 'legendary', ['Gold', 'Gummy', 'Galaxy', 'Gem'], 'Opening ammo boxes can grant a weapon upgrade.', 'ch7s3'],
+    ['Zero Point', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack', 'Gem'], 'Spawns a Shield Bubble Jr. when you use a healing item.', 'ch7s3'],
+    ['Burnt Peanut', 'mythic', [], 'Eliminations may drop extra loot, sometimes Mythic.', 'ch7s3'],
+    ['Grim', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Gem'], 'Marks an enemy as soon as they damage you.', 'ch7s3'],
+    ['Batman', 'mythic', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube'], 'Launch into the air and deploy the Bat Cape.', 'ch7s3'],
+    ['Vini Jr.', 'mythic', [], 'Destructive sprint-slides; slidekicks boost fire rate and reload speed.', 'ch7s3'],
+    ['Pollo', 'mythic', [], 'Eliminations slowly regenerate your shield and nearby squadmates\'.', 'ch7s3'],
+    ['John Wick', 'mythic', [], 'Knocking a player reveals other nearby enemies.', 'ch7s3'],
+    ['Ironmouse', 'mythic', [], 'Regenerates health when low; grants Cloak and low gravity while regenerating.', 'ch7s3'],
+    // -- Ch7 Season 4 "Override" -- upcoming (not yet trackable) ----------------
+    ['Sonic', 'mythic', [], 'Lets you use Sonic\'s Spin Dash; greatly boosts sprint speed.', 'ch7s4'],
+    ['Tails', 'epic', [], 'Sidekick: magnetism pulls in nearby items and ammo.', 'ch7s4'],
+    ['Klombo', 'legendary', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    ['Bullet', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    ['Dumpster Dive', 'epic', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    ['Honey', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    ['X-Ray', 'epic', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    ['Pond', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
   ];
 
   // Original hotlink source for each icon (id -> URL), all from static.beebom.com. This is the
@@ -215,8 +229,10 @@
 
   function buildCatalog() {
     const catalog = [];
-    for (const [species, rarity, variants, ability] of SPECIES) {
+    for (const [species, rarity, variants, ability, season] of SPECIES) {
       const speciesSlug = slugify(species);
+      const upcoming = season === 'ch7s4';
+      // Upcoming sprites with no known variants only get a placeholder Base entry.
       const allVariants = ['Base', ...variants];
       for (const variant of allVariants) {
         const id = variant === 'Base' ? `${speciesSlug}-base` : `${speciesSlug}-${slugify(variant)}`;
@@ -227,6 +243,8 @@
           variant,
           rarity,
           ability,
+          season,
+          upcoming,
           icon: source ? `images/${id}.${extOf(source)}` : null,
         });
       }

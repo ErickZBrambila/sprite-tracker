@@ -12,6 +12,7 @@ window.addEventListener('resize', setDeviceType);
 const checklistViewEl = el('checklistView');
 const dashboardViewEl = el('dashboardView');
 const compareViewEl   = el('compareView');
+const wikiViewEl      = el('wikiView');
 const viewSwitchEl = el('viewSwitch');
 const exportBtn = el('exportBtn');
 const importBtn = el('importBtn');
@@ -23,11 +24,52 @@ const confirmModal = el('confirmModal');
 const confirmCancel = el('confirmCancel');
 const confirmOk = el('confirmOk');
 
-const CATALOG = SpritesData.CATALOG;
+const ALL_SPRITES = SpritesData.CATALOG;
+const CATALOG  = ALL_SPRITES.filter(s => !s.upcoming); // trackable sprites only
+const UPCOMING = ALL_SPRITES.filter(s => s.upcoming);  // Ch7 S4 preview sprites
 const TOTAL = CATALOG.length;
 const RARITIES = ['rare', 'epic', 'legendary', 'mythic'];
 const RARITY_LABELS = { rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' };
 const VARIANT_TYPES = ['Base', 'Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack', 'Gem'];
+
+const SEASON_LABELS = { ch6s1: 'Ch6 S1', ch7s3: 'Ch7 S3', ch7s4: 'Ch7 S4' };
+
+// Per-species wiki data: locations and lore notes.
+const WIKI_INFO = {
+  'Earth':         { locations: 'Forest shrines, chest-cluster areas, magical glades',      lore: 'One of the original Sprites from Chapter 6 Season 1.' },
+  'Fire':          { locations: 'Volcanic zones, combat-heavy POIs, lava-adjacent areas',   lore: 'Original Ch6S1 Sprite — returns with new variant types each season.' },
+  'Water':         { locations: 'Rivers, coastal shrines, lakesides',                       lore: 'Original Ch6S1 Sprite. Pairs well with squad play near water biomes.' },
+  'Duck':          { locations: 'Pond biomes, lowland Sprite gardens',                      lore: 'Original Ch6S1 Sprite — the emote-powered shield refill is great in squads.' },
+  'Ghost':         { locations: 'Shadow shrines, dark forest clearings',                    lore: 'Original Ch6S1 Sprite. The reload-cloak catches enemies completely off guard.' },
+  'Demon':         { locations: 'Lava zones, boss lairs, contested POIs',                   lore: 'Original Ch6S1 Sprite. One of the strongest solo-play Sprites for siphon.' },
+  'King':          { locations: 'Highland ruins, central named POIs',                       lore: 'Original Ch6S1 Sprite. Pickaxe buff is mostly novelty, but the numbers are wild.' },
+  'Dream':         { locations: 'Magical glades, floating island POIs',                     lore: 'Original Ch6S1 Sprite — the loot-burst at max level can yield Mythic items.' },
+  'Punk':          { locations: 'Urban zones, industrial POIs',                             lore: 'Original Ch6S1 Sprite. Infinite ammo proc feels overpowered when it triggers.' },
+  'Air':           { locations: 'Mountain peaks, floating platforms, sky POIs',             lore: 'Added Ch7 S3 — the no-fall-damage effect alone makes it a high-value Sprite.' },
+  'Fishy':         { locations: 'Waterways, fishing docks, coastal gardens',                lore: 'Added Ch7 S3. Swim-speed boost is niche but the damage-taken sprint is clutch.' },
+  'Striker':       { locations: 'Mountain ridges, high-ground POIs',                       lore: 'Added Ch7 S3. Pairs well with aggressive high-ground play.' },
+  'Aura':          { locations: 'Crystal caves, glowing shrines, mid-map areas',           lore: 'Added Ch7 S3. Generates Shock Rock charges passively through combat.' },
+  'Boss':          { locations: 'Named POIs, boss-room spawn areas',                        lore: 'Added Ch7 S3. Pure stat boost — simple, effective, and easy to play around.' },
+  'Seven':         { locations: 'Seven faction outposts, signal towers',                   lore: 'Added Ch7 S3. The Crossover — The Seven faction Sprite.' },
+  'Peeky Peely':   { locations: 'Banana-grove biomes, Peely-themed POIs',                  lore: 'Added Ch7 S3. Tracks rare nearby Sprites at the cost of marking yourself.' },
+  "Lootin' Llama": { locations: 'Llama-themed spawn points, ammo-box clusters',            lore: 'Added Ch7 S3. High-value on chaotic maps with lots of ammo boxes.' },
+  'Zero Point':    { locations: 'Zero Point crater area, central map',                     lore: 'Added Ch7 S3. Circles near the Zero Point — rarest Mythic on the map.' },
+  'Burnt Peanut':  { locations: 'Scattered loot zones, rare individual spawn',             lore: 'Added Ch7 S3. Unique Mythic with no variants — one-of-a-kind loot proc.' },
+  'Grim':          { locations: 'Shadow shrines, dark biome POIs',                         lore: 'Added Ch7 S3. Instant mark on damage-taken is exceptional for information.' },
+  'Batman':        { locations: 'Gotham-themed POI, rooftop gardens',                      lore: 'Added Ch7 S3 — Crossover with DC Batman. Bat Cape launch is cinematic.' },
+  'Vini Jr.':      { locations: 'Stadium POI, sports-zone gardens',                        lore: 'Added Ch7 S3 — Crossover collab with Vini Jr.' },
+  'Pollo':         { locations: 'Forest clearings, barnyard-adjacent areas',               lore: 'Added Ch7 S3 — Crossover collab. Squad shield regen is excellent.' },
+  'John Wick':     { locations: 'Continental hotel POI, urban gardens',                    lore: 'Added Ch7 S3 — Crossover collab. Enemy reveal on knock is invaluable in squads.' },
+  'Ironmouse':     { locations: 'Streamer-themed POI, hidden woodland gardens',            lore: 'Added Ch7 S3 — VTuber collab with Ironmouse. Low-grav cloak is a unique escape.' },
+  'Sonic':         { locations: 'Coming Ch7 S4 Override',                                  lore: 'Gaming Legends crossover — confirmed for Ch7 S4 launch.' },
+  'Tails':         { locations: 'Coming Ch7 S4 Override',                                  lore: 'Sidekick Sprite — follows you and pulls in items. Ch7 S4 launch.' },
+  'Klombo':        { locations: 'Coming Ch7 S4 Override',                                  lore: 'Fan-favorite Klombo returns as a Sprite in Ch7 S4.' },
+  'Bullet':        { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+  'Dumpster Dive': { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+  'Honey':         { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+  'X-Ray':         { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+  'Pond':          { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+};
 
 let currentView = 'checklist';
 let toastTimer = null;
@@ -109,8 +151,9 @@ let filters = {
   search: '',
   rarity: 'all',
   variant: 'all',
-  view: 'all', // all | owned | missing | needsMastery | mastered
+  view: 'all',    // all | owned | missing | needsMastery | mastered
   sort: 'species', // species | alpha | rarity | completion
+  season: 'all',  // all | ch6s1 | ch7s3 | ch7s4
 };
 
 function showToast(message, type = 'info') {
@@ -154,15 +197,20 @@ function relativeTime(iso) {
 }
 
 // ---- View switching ----
+function switchView(view) {
+  currentView = view;
+  [...viewSwitchEl.children].forEach((b) => b.classList.toggle('active', b.dataset.view === view));
+  checklistViewEl.hidden = view !== 'checklist';
+  dashboardViewEl.hidden = view !== 'dashboard';
+  compareViewEl.hidden   = view !== 'compare';
+  wikiViewEl.hidden      = view !== 'wiki';
+  render();
+}
+
 viewSwitchEl.addEventListener('click', (e) => {
   const btn = e.target.closest('.view-switch-btn');
   if (!btn) return;
-  currentView = btn.dataset.view;
-  [...viewSwitchEl.children].forEach((b) => b.classList.toggle('active', b === btn));
-  checklistViewEl.hidden = currentView !== 'checklist';
-  dashboardViewEl.hidden = currentView !== 'dashboard';
-  compareViewEl.hidden   = currentView !== 'compare';
-  render();
+  switchView(btn.dataset.view);
 });
 
 // ---- Help / Tour ----
@@ -214,60 +262,95 @@ function toggleSprite(spriteId) {
 function renderChecklist() {
   checklistViewEl.innerHTML = '';
   const state = SpriteStore.getCurrentState();
+  const isUpcoming = filters.season === 'ch7s4';
 
   const wrap = document.createElement('div');
   wrap.className = 'sprite-wrap';
 
-  const ownedCount = CATALOG.filter((s) => state[s.id]?.owned).length;
+  const ownedCount    = CATALOG.filter((s) => state[s.id]?.owned).length;
   const masteredCount = CATALOG.filter((s) => state[s.id]?.mastered).length;
 
-  wrap.appendChild(buildStatHeadline(ownedCount, masteredCount));
+  if (!isUpcoming) wrap.appendChild(buildStatHeadline(ownedCount, masteredCount));
 
-  // ---- Toolbar ----
-  const toolbar = document.createElement('div');
-  toolbar.className = 'sprite-toolbar';
+  // ---- Toolbar (hidden in upcoming view) ----
+  if (!isUpcoming) {
+    const toolbar = document.createElement('div');
+    toolbar.className = 'sprite-toolbar';
 
-  const searchInput = document.createElement('input');
-  searchInput.type = 'search';
-  searchInput.placeholder = 'Search Sprites…';
-  searchInput.value = filters.search;
-  searchInput.className = 'sprite-search';
-  searchInput.oninput = () => { filters.search = searchInput.value; renderChecklist(); };
-  toolbar.appendChild(searchInput);
+    const searchInput = document.createElement('input');
+    searchInput.type = 'search';
+    searchInput.placeholder = 'Search Sprites…';
+    searchInput.value = filters.search;
+    searchInput.className = 'sprite-search';
+    searchInput.oninput = () => { filters.search = searchInput.value; renderChecklist(); };
+    toolbar.appendChild(searchInput);
 
-  toolbar.appendChild(makeSelect('sprite-filter-select', filters.rarity, [
-    ['all', 'All rarities'], ...RARITIES.map((r) => [r, RARITY_LABELS[r]]),
-  ], (v) => { filters.rarity = v; renderChecklist(); }));
+    toolbar.appendChild(makeSelect('sprite-filter-select', filters.rarity, [
+      ['all', 'All rarities'], ...RARITIES.map((r) => [r, RARITY_LABELS[r]]),
+    ], (v) => { filters.rarity = v; renderChecklist(); }));
 
-  toolbar.appendChild(makeSelect('sprite-filter-select', filters.variant, [
-    ['all', 'All variants'], ...VARIANT_TYPES.map((v) => [v, v]),
-  ], (v) => { filters.variant = v; renderChecklist(); }));
+    toolbar.appendChild(makeSelect('sprite-filter-select', filters.variant, [
+      ['all', 'All variants'], ...VARIANT_TYPES.map((v) => [v, v]),
+    ], (v) => { filters.variant = v; renderChecklist(); }));
 
-  toolbar.appendChild(makeSelect('sprite-filter-select', filters.sort, [
-    ['species', 'Sort: Species'], ['alpha', 'Sort: A-Z'], ['rarity', 'Sort: Rarity'], ['completion', 'Sort: Least complete first'],
-  ], (v) => { filters.sort = v; renderChecklist(); }));
+    toolbar.appendChild(makeSelect('sprite-filter-select', filters.sort, [
+      ['species', 'Sort: Species'], ['alpha', 'Sort: A-Z'], ['rarity', 'Sort: Rarity'], ['completion', 'Sort: Least complete first'],
+    ], (v) => { filters.sort = v; renderChecklist(); }));
 
-  const viewGroup = document.createElement('div');
-  viewGroup.className = 'sprite-view-group';
-  [['all', 'All'], ['owned', 'Owned'], ['missing', 'Missing'], ['needsMastery', 'Needs Mastery'], ['mastered', 'Mastered']].forEach(([value, label]) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'sprite-view-btn' + (filters.view === value ? ' active' : '');
-    btn.textContent = label;
-    btn.onclick = () => { filters.view = value; renderChecklist(); };
-    viewGroup.appendChild(btn);
+    const viewGroup = document.createElement('div');
+    viewGroup.className = 'sprite-view-group';
+    [['all', 'All'], ['owned', 'Owned'], ['missing', 'Missing'], ['needsMastery', 'Needs Mastery'], ['mastered', 'Mastered']].forEach(([value, label]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sprite-view-btn' + (filters.view === value ? ' active' : '');
+      btn.textContent = label;
+      btn.onclick = () => { filters.view = value; renderChecklist(); };
+      viewGroup.appendChild(btn);
+    });
+    toolbar.appendChild(viewGroup);
+    wrap.appendChild(toolbar);
+  }
+
+  // ---- Season pills ----
+  const seasonRow = document.createElement('div');
+  seasonRow.className = 'season-pill-row';
+  [
+    ['all',   'All Seasons'],
+    ['ch6s1', 'Ch6 S1'],
+    ['ch7s3', 'Ch7 S3'],
+    ['ch7s4', '✦ Upcoming'],
+  ].forEach(([value, label]) => {
+    const pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'season-pill' + (filters.season === value ? ' active' : '');
+    if (value === 'ch7s4') pill.classList.add('season-pill--upcoming');
+    pill.textContent = label;
+    pill.onclick = () => { filters.season = value; renderChecklist(); };
+    seasonRow.appendChild(pill);
   });
-  toolbar.appendChild(viewGroup);
+  wrap.appendChild(seasonRow);
 
-  wrap.appendChild(toolbar);
+  // ---- Upcoming banner ----
+  if (isUpcoming) {
+    const banner = document.createElement('div');
+    banner.className = 'upcoming-banner';
+    banner.innerHTML = `
+      <div class="upcoming-banner-title">Ch7 S4 Override — Aug 20, 2026</div>
+      <div class="upcoming-banner-body">These Sprites have been announced but are not yet in the game. Tracking opens when the season launches.</div>
+    `;
+    wrap.appendChild(banner);
+  }
 
-  // ---- Filtering ----
+  // ---- Build item list ----
+  const pool = isUpcoming ? UPCOMING : CATALOG;
   const q = filters.search.trim().toLowerCase();
-  const filtered = CATALOG.filter((sprite) => {
+
+  const filtered = pool.filter((sprite) => {
+    if (isUpcoming) return !q || sprite.species.toLowerCase().includes(q);
+    if (filters.season !== 'all' && sprite.season !== filters.season) return false;
     if (filters.rarity !== 'all' && sprite.rarity !== filters.rarity) return false;
     if (filters.variant !== 'all' && sprite.variant !== filters.variant) return false;
     if (q && !sprite.species.toLowerCase().includes(q)) return false;
-
     const s = state[sprite.id] || { owned: false, mastered: false };
     if (filters.view === 'owned' && !s.owned) return false;
     if (filters.view === 'missing' && s.owned) return false;
@@ -287,10 +370,11 @@ function renderChecklist() {
   const rarityRank = (r) => RARITIES.indexOf(r);
   const completionOf = (variants) => variants.filter((v) => state[v.id]?.owned).length / variants.length;
 
-  if (filters.sort === 'alpha') groups.sort((a, b) => a[0].localeCompare(b[0]));
-  else if (filters.sort === 'rarity') groups.sort((a, b) => rarityRank(a[1][0].rarity) - rarityRank(b[1][0].rarity) || a[0].localeCompare(b[0]));
-  else if (filters.sort === 'completion') groups.sort((a, b) => completionOf(a[1]) - completionOf(b[1]) || a[0].localeCompare(b[0]));
-  // 'species' = catalog's natural order (already grouped in definition order)
+  if (!isUpcoming) {
+    if (filters.sort === 'alpha') groups.sort((a, b) => a[0].localeCompare(b[0]));
+    else if (filters.sort === 'rarity') groups.sort((a, b) => rarityRank(a[1][0].rarity) - rarityRank(b[1][0].rarity) || a[0].localeCompare(b[0]));
+    else if (filters.sort === 'completion') groups.sort((a, b) => completionOf(a[1]) - completionOf(b[1]) || a[0].localeCompare(b[0]));
+  }
 
   const list = document.createElement('div');
   list.className = 'sprite-species-list';
@@ -307,15 +391,13 @@ function renderChecklist() {
     const speciesOwned = variants.filter((v) => state[v.id]?.owned).length;
 
     const group = document.createElement('div');
-    group.className = `sprite-species rarity-${rarity}`;
+    group.className = `sprite-species rarity-${rarity}${isUpcoming ? ' sprite-species--upcoming' : ''}`;
 
     const header = document.createElement('div');
     header.className = 'sprite-species-header';
-    header.innerHTML = `
-      <span class="dot"></span>
-      <span class="sprite-species-name">${species}</span>
-      <span class="sprite-species-count">${speciesOwned}/${variants.length}</span>
-    `;
+    header.innerHTML = isUpcoming
+      ? `<span class="dot"></span><span class="sprite-species-name">${species}</span><span class="soon-badge">SOON</span>`
+      : `<span class="dot"></span><span class="sprite-species-name">${species}</span><span class="sprite-species-count">${speciesOwned}/${variants.length}</span>`;
     group.appendChild(header);
 
     const ability = document.createElement('p');
@@ -326,6 +408,17 @@ function renderChecklist() {
     const chips = document.createElement('div');
     chips.className = 'sprite-chip-row';
     variants.forEach((sprite) => {
+      if (isUpcoming) {
+        const chip = document.createElement('div');
+        chip.className = 'sprite-chip sprite-chip--upcoming no-icon';
+        const label = document.createElement('span');
+        label.className = 'sprite-chip-label';
+        label.textContent = sprite.variant;
+        chip.appendChild(label);
+        chips.appendChild(chip);
+        return;
+      }
+
       const s = state[sprite.id] || { owned: false, mastered: false };
       const chip = document.createElement('button');
       chip.type = 'button';
@@ -355,7 +448,6 @@ function renderChecklist() {
       chips.appendChild(chip);
     });
     group.appendChild(chips);
-
     list.appendChild(group);
   }
 
@@ -727,6 +819,143 @@ function renderCompare() {
   compareViewEl.appendChild(wrap);
 }
 
+// ================= Wiki view =================
+
+function openWikiDetail(species) {
+  const modal    = el('wikiDetailModal');
+  const content  = el('wikiDetailContent');
+  const closeBtn = el('wikiDetailClose');
+
+  // All variants for this species (including upcoming)
+  const allVariants = ALL_SPRITES.filter(s => s.species === species);
+  if (!allVariants.length) return;
+
+  const { rarity, ability, season, upcoming } = allVariants[0];
+  const info = WIKI_INFO[species] || {};
+  const baseSprite = allVariants.find(s => s.variant === 'Base') || allVariants[0];
+
+  const rLabel  = RARITY_LABELS[rarity] || rarity;
+  const sLabel  = SEASON_LABELS[season] || season;
+
+  content.innerHTML = `
+    <div class="wiki-detail-header">
+      <span class="wiki-rarity-tag wiki-rarity-tag--${rarity}">${rLabel}</span>
+      ${upcoming ? '<span class="soon-badge">SOON</span>' : ''}
+    </div>
+    <h3 class="wiki-detail-name">${species}</h3>
+    ${baseSprite.icon ? `<div class="wiki-detail-img-wrap"><img src="${baseSprite.icon}" alt="${species} Base" class="wiki-detail-img" /></div>` : ''}
+    <div class="wiki-detail-meta">
+      <div class="wiki-meta-row"><span class="wiki-meta-key">Season</span><span class="wiki-meta-val">${sLabel}</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">Ability</span><span class="wiki-meta-val">${ability}</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">Drop Rate</span><span class="wiki-meta-val">—</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">Locations</span><span class="wiki-meta-val">${info.locations || '—'}</span></div>
+      ${info.lore ? `<div class="wiki-lore">${info.lore}</div>` : ''}
+    </div>
+    <div class="wiki-detail-variants">
+      <div class="wiki-variants-label">Variants (${allVariants.length})</div>
+      <div class="wiki-variants-row">
+        ${allVariants.map(s => `
+          <div class="wiki-variant-chip">
+            ${s.icon ? `<img src="${s.icon}" alt="${s.variant}" class="wiki-variant-img" />` : `<div class="wiki-variant-ph rarity-bg-${rarity}"></div>`}
+            <span>${s.variant}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  modal.hidden = false;
+
+  const close = () => { modal.hidden = true; };
+  closeBtn.onclick = close;
+  modal.onclick = (e) => { if (e.target === modal) close(); };
+}
+
+function renderWiki() {
+  wikiViewEl.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'sprite-wrap wiki-wrap';
+
+  const heading = document.createElement('div');
+  heading.className = 'wiki-heading';
+  heading.innerHTML = `<h2 class="wiki-title">Sprite Wiki</h2><p class="wiki-subtitle">Tap any Sprite to see its ability, season, locations, and all variants. Read-only — use the Checklist tab to track your collection.</p>`;
+  wrap.appendChild(heading);
+
+  // Group by season, then by species within each season
+  const seasons = [
+    { key: 'ch6s1', label: 'Chapter 6 Season 1', items: [] },
+    { key: 'ch7s3', label: 'Chapter 7 Season 3 — Runners', items: [] },
+    { key: 'ch7s4', label: 'Chapter 7 Season 4 — Override (Upcoming)', items: [], upcoming: true },
+  ];
+
+  // Build unique species list from ALL_SPRITES, preserving definition order
+  const seenSpecies = new Set();
+  for (const sprite of ALL_SPRITES) {
+    if (sprite.variant !== 'Base') continue;
+    if (seenSpecies.has(sprite.species)) continue;
+    seenSpecies.add(sprite.species);
+    const s = seasons.find(s => s.key === sprite.season);
+    if (s) s.items.push(sprite);
+  }
+
+  for (const season of seasons) {
+    if (!season.items.length) continue;
+
+    const section = document.createElement('section');
+    section.className = 'wiki-season-section';
+
+    const sectionHeader = document.createElement('div');
+    sectionHeader.className = `wiki-season-header${season.upcoming ? ' wiki-season-header--upcoming' : ''}`;
+    sectionHeader.innerHTML = `<span class="wiki-season-title">${season.label}</span><span class="wiki-season-count">${season.items.length} species</span>`;
+    section.appendChild(sectionHeader);
+
+    const grid = document.createElement('div');
+    grid.className = 'wiki-species-grid';
+
+    for (const sprite of season.items) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = `wiki-species-card rarity-border-${sprite.rarity}${season.upcoming ? ' wiki-species-card--upcoming' : ''}`;
+      card.title = `View ${sprite.species} details`;
+
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'wiki-card-img-wrap';
+      if (sprite.icon) {
+        const img = document.createElement('img');
+        img.src = sprite.icon;
+        img.alt = sprite.species;
+        img.loading = 'lazy';
+        img.className = 'wiki-card-img';
+        img.onerror = () => imgWrap.classList.add('wiki-card-img-wrap--empty');
+        imgWrap.appendChild(img);
+      } else {
+        imgWrap.classList.add('wiki-card-img-wrap--empty');
+      }
+
+      const info = document.createElement('div');
+      info.className = 'wiki-card-info';
+      const allVariantsCount = ALL_SPRITES.filter(s => s.species === sprite.species).length;
+      info.innerHTML = `
+        <div class="wiki-card-name">${sprite.species}</div>
+        <div class="wiki-card-meta">
+          <span class="wiki-rarity-tag wiki-rarity-tag--${sprite.rarity} wiki-rarity-tag--sm">${RARITY_LABELS[sprite.rarity]}</span>
+          ${season.upcoming ? '<span class="soon-badge">SOON</span>' : `<span class="wiki-card-variants">${allVariantsCount} variants</span>`}
+        </div>
+      `;
+
+      card.appendChild(imgWrap);
+      card.appendChild(info);
+      card.onclick = () => openWikiDetail(sprite.species);
+      grid.appendChild(card);
+    }
+
+    section.appendChild(grid);
+    wrap.appendChild(section);
+  }
+
+  wikiViewEl.appendChild(wrap);
+}
+
 // ---- Add friend modal ----
 const addFriendModal      = el('addFriendModal');
 const friendCodeInput     = el('friendCodeInput');
@@ -762,6 +991,7 @@ friendCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') addFri
 function render() {
   if (currentView === 'checklist') renderChecklist();
   else if (currentView === 'compare') renderCompare();
+  else if (currentView === 'wiki') renderWiki();
   else renderDashboard();
 }
 
