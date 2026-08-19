@@ -1181,6 +1181,44 @@ button:active { transform: scale(0.97); }
 [data-device="tablet"] .sprite-view-btn { padding: 7px 14px; }
 
 /* ================================================================
+   Share modal & canvas card
+   ================================================================ */
+
+.share-modal {
+  max-width: 460px;
+}
+.share-card-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+.share-card-canvas {
+  width: 300px;
+  height: 300px;
+  border-radius: 12px;
+  display: block;
+  background: #060a12;
+}
+.share-link-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--panel-2);
+  border: 1px solid var(--border-solid);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+.share-link-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--muted);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================
    Story view — deep-sea-style Fortnite chapter chronicle
    ================================================================ */
 

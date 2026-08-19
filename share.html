@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sprite Collection · Sprite Tracker</title>
+<meta name="description" content="Check out my Fortnite Sprite collection on Sprite Tracker!" />
+<meta property="og:title" content="My Fortnite Sprite Collection" />
+<meta property="og:description" content="Track and share your Fortnite Sprites — account-free." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0a0e17; --panel: #131926; --panel-2: #1a2233;
+  --border: rgba(42,52,80,0.5); --text: #eef1f8; --muted: #8b93a7;
+  --accent: #8b6cff; --accent-2: #22d3ee;
+  --rare: #4fa8ff; --epic: #c46bff; --legendary: #ff9f43; --mythic: #ffd95a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+html, body { min-height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+h1,h2,h3 { font-family: 'Space Grotesk', sans-serif; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 52px;
+  background: rgba(10,14,23,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; }
+.brand-mark { color: var(--accent); }
+.viewing-chip { font-size: 12px; color: var(--muted); background: rgba(255,255,255,0.06); border-radius: 20px; padding: 4px 12px; }
+.cta-btn {
+  background: var(--accent); color: white; border: none; border-radius: 8px;
+  padding: 8px 18px; font: 600 13px 'Inter', sans-serif; cursor: pointer; text-decoration: none;
+}
+.cta-btn:hover { filter: brightness(1.12); }
+
+.page { max-width: 760px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* State messages */
+.state-msg { text-align: center; padding: 80px 24px; color: var(--muted); }
+.state-msg h2 { font-size: 20px; margin-bottom: 8px; color: var(--text); }
+
+/* Stats bar */
+.stats-bar {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.stats-main { display: flex; align-items: baseline; gap: 6px; }
+.stats-big { font-family: 'Space Grotesk', sans-serif; font-size: 52px; font-weight: 700; line-height: 1; }
+.stats-denom { font-size: 24px; color: var(--muted); font-family: 'Space Grotesk', sans-serif; }
+.stats-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.stats-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+.rarity-pill {
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(255,255,255,0.05); border-radius: 10px;
+  padding: 8px 14px; min-width: 64px;
+}
+.rarity-pill-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 3px; }
+.rarity-pill-count { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; }
+.rarity-pill--rare    .rarity-pill-label { color: var(--rare); }
+.rarity-pill--epic    .rarity-pill-label { color: var(--epic); }
+.rarity-pill--legendary .rarity-pill-label { color: var(--legendary); }
+.rarity-pill--mythic  .rarity-pill-label { color: var(--mythic); }
+
+.progress-track {
+  height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; margin-bottom: 24px;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px; transition: width .6s ease;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+/* Species sections */
+.species-section { margin-bottom: 28px; }
+.species-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.species-name { font-size: 15px; font-weight: 600; }
+.species-rarity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.species-rarity-dot--rare      { background: var(--rare); }
+.species-rarity-dot--epic      { background: var(--epic); }
+.species-rarity-dot--legendary { background: var(--legendary); }
+.species-rarity-dot--mythic    { background: var(--mythic); }
+
+.variants-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.share-chip {
+  width: 58px; height: 58px; border-radius: 10px; overflow: hidden;
+  border: 2px solid transparent; position: relative; background: rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .15s;
+}
+.share-chip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.share-chip-placeholder {
+  font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.3);
+}
+.share-chip--missing { opacity: 0.28; }
+.share-chip--owned   { border-color: rgba(255,255,255,0.18); opacity: 0.75; }
+.share-chip--owned::after {
+  content: '✓'; position: absolute; bottom: 2px; right: 4px;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7);
+}
+.share-chip--mastered { opacity: 1; }
+.share-chip--mastered::after {
+  content: '★'; position: absolute; bottom: 2px; right: 4px;
+  font-size: 11px; font-weight: 700; color: var(--mythic);
+}
+.share-chip--rare      { border-color: rgba(79,168,255,0.4); }
+.share-chip--epic      { border-color: rgba(196,107,255,0.4); }
+.share-chip--legendary { border-color: rgba(255,159,67,0.4); }
+.share-chip--mythic    { border-color: rgba(255,217,90,0.4); }
+
+.chip-label { font-size: 9px; text-align: center; color: var(--muted); margin-top: 3px; width: 58px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.footer-cta {
+  text-align: center; margin-top: 48px; padding: 32px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+}
+.footer-cta p { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
+.footer-cta a { display: inline-block; background: var(--accent); color: white; text-decoration: none; border-radius: 8px; padding: 10px 24px; font: 600 14px 'Inter', sans-serif; }
+.footer-cta a:hover { filter: brightness(1.12); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">◆</span> Sprite Tracker</div>
+  <span class="viewing-chip" id="viewingChip">Loading…</span>
+  <a href="/" class="cta-btn">Track yours →</a>
+</header>
+
+<div class="page">
+  <div id="loadState" class="state-msg">
+    <h2>Loading collection…</h2>
+    <p>Fetching Sprite data</p>
+  </div>
+
+  <div id="errorState" class="state-msg" hidden>
+    <h2 id="errorTitle">Not found</h2>
+    <p id="errorBody">That sync code doesn't exist. Double-check the link.</p>
+  </div>
+
+  <div id="collection" hidden>
+    <div class="stats-bar">
+      <div>
+        <div class="stats-main">
+          <span class="stats-big" id="ownedCount">0</span>
+          <span class="stats-denom"> / <span id="totalCount">0</span></span>
+        </div>
+        <div class="stats-sub" id="statsSub">sprites collected</div>
+      </div>
+      <div class="stats-pills" id="rarityPills"></div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div id="speciesList"></div>
+
+    <div class="footer-cta">
+      <p>Want to track your own Sprite collection?</p>
+      <a href="/">Open Sprite Tracker →</a>
+    </div>
+  </div>
+</div>
+
+<script src="/spritesData.js"></script>
+<script>
+const RARITIES = ['mythic', 'legendary', 'epic', 'rare'];
+const RARITY_LABELS = { rare: 'Rare', epic: 'Epic', legendary: 'Legendary', mythic: 'Mythic' };
+
+const code = new URLSearchParams(location.search).get('code');
+
+function showError(title, body) {
+  document.getElementById('loadState').hidden = true;
+  document.getElementById('errorTitle').textContent = title;
+  document.getElementById('errorBody').textContent = body || '';
+  document.getElementById('errorState').hidden = false;
+}
+
+function foldEvents(events) {
+  const s = {};
+  for (const ev of events) s[ev.id] = { owned: ev.owned, mastered: ev.mastered };
+  return s;
+}
+
+function render(events) {
+  const state = foldEvents(events);
+  const catalog = SpritesData.CATALOG.filter(s => !s.upcoming);
+  const total = catalog.length;
+  const owned = catalog.filter(s => state[s.id]?.owned).length;
+  const mastered = catalog.filter(s => state[s.id]?.mastered).length;
+
+  document.getElementById('viewingChip').textContent = code;
+  document.getElementById('ownedCount').textContent = owned;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('statsSub').textContent =
+    `sprites collected · ${mastered} mastered ★`;
+  document.getElementById('progressFill').style.width = `${Math.round((owned / total) * 100)}%`;
+
+  // Rarity pills
+  const pillsEl = document.getElementById('rarityPills');
+  for (const r of RARITIES) {
+    const sprites = catalog.filter(s => s.rarity === r);
+    const cnt = sprites.filter(s => state[s.id]?.owned).length;
+    const pill = document.createElement('div');
+    pill.className = `rarity-pill rarity-pill--${r}`;
+    pill.innerHTML = `<span class="rarity-pill-label">${RARITY_LABELS[r]}</span><span class="rarity-pill-count">${cnt}/${sprites.length}</span>`;
+    pillsEl.appendChild(pill);
+  }
+
+  // Group by species
+  const speciesMap = {};
+  for (const sprite of catalog) {
+    if (!speciesMap[sprite.species]) speciesMap[sprite.species] = { rarity: sprite.rarity, variants: [] };
+    speciesMap[sprite.species].variants.push(sprite);
+  }
+
+  // Sort species: by rarity desc, then name
+  const rarityOrder = { mythic: 0, legendary: 1, epic: 2, rare: 3 };
+  const sortedSpecies = Object.entries(speciesMap).sort((a, b) =>
+    rarityOrder[a[1].rarity] - rarityOrder[b[1].rarity] || a[0].localeCompare(b[0])
+  );
+
+  const listEl = document.getElementById('speciesList');
+  for (const [speciesName, { rarity, variants }] of sortedSpecies) {
+    const section = document.createElement('div');
+    section.className = 'species-section';
+
+    const header = document.createElement('div');
+    header.className = 'species-header';
+    header.innerHTML = `
+      <span class="species-rarity-dot species-rarity-dot--${rarity}"></span>
+      <span class="species-name">${speciesName}</span>
+    `;
+    section.appendChild(header);
+
+    const row = document.createElement('div');
+    row.className = 'variants-row';
+    for (const sprite of variants) {
+      const s = state[sprite.id] || {};
+      const status = s.mastered ? 'mastered' : s.owned ? 'owned' : 'missing';
+      const wrap = document.createElement('div');
+
+      const chip = document.createElement('div');
+      chip.className = `share-chip share-chip--${status} share-chip--${rarity}`;
+      if (sprite.icon) {
+        const img = document.createElement('img');
+        img.src = sprite.icon;
+        img.alt = sprite.variant;
+        img.loading = 'lazy';
+        chip.appendChild(img);
+      } else {
+        const ph = document.createElement('div');
+        ph.className = 'share-chip-placeholder';
+        ph.textContent = sprite.species[0];
+        chip.appendChild(ph);
+      }
+      wrap.appendChild(chip);
+
+      const label = document.createElement('div');
+      label.className = 'chip-label';
+      label.textContent = sprite.variant;
+      wrap.appendChild(label);
+
+      row.appendChild(wrap);
+    }
+    section.appendChild(row);
+    listEl.appendChild(section);
+  }
+
+  document.getElementById('loadState').hidden = true;
+  document.getElementById('collection').hidden = false;
+}
+
+async function load() {
+  if (!code) { showError('No sync code', 'Add ?code=your-code to the URL.'); return; }
+  try {
+    const lookupRes = await fetch(`/api/devices/lookup/${encodeURIComponent(code)}`);
+    if (lookupRes.status === 404) { showError('Sync code not found', 'Check the link for typos.'); return; }
+    if (!lookupRes.ok) { showError('Server error', 'Please try again.'); return; }
+    const { deviceId } = await lookupRes.json();
+    const evRes = await fetch(`/api/devices/${deviceId}/events`);
+    if (!evRes.ok) { showError('Could not load collection'); return; }
+    const { events } = await evRes.json();
+    render(events);
+  } catch {
+    showError('Could not reach server', 'Check your connection and try again.');
+  }
+}
+
+load();
+</script>
+</body>
+</html>

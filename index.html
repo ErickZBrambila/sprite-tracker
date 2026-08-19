@@ -29,6 +29,9 @@
   </nav>
 
   <div class="topbar-actions">
+    <button id="shareBtn" class="icon-btn" title="Share your collection">
+      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+    </button>
     <button id="syncBtn" class="sync-code-chip" title="Your sync code — click to manage">
       <svg viewBox="0 0 24 24" width="13" height="13" style="flex-shrink:0;opacity:0.7"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       <span id="syncCodeChip">···</span>
@@ -121,6 +124,24 @@
     <div class="modal-actions">
       <button type="button" id="addFriendCancelBtn" class="btn-ghost">Cancel</button>
       <button type="button" id="addFriendConfirmBtn" class="btn-primary">Add</button>
+    </div>
+  </div>
+</div>
+
+<div id="shareModal" class="modal-backdrop" hidden>
+  <div class="modal share-modal">
+    <h3>Share your collection</h3>
+    <p class="sync-hint">Anyone with this link can view your Sprites — read-only.</p>
+    <div class="share-card-wrap">
+      <canvas id="shareCardCanvas" class="share-card-canvas"></canvas>
+    </div>
+    <div class="share-link-row">
+      <span class="share-link-text" id="shareLinkText"></span>
+      <button type="button" id="shareLinkCopyBtn" class="btn-copy">Copy</button>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="shareCloseBtn" class="btn-ghost">Close</button>
+      <button type="button" id="shareDownloadBtn" class="btn-primary">↓ Download image</button>
     </div>
   </div>
 </div>

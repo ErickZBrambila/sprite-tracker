@@ -1434,6 +1434,208 @@ syncConnectBtn.addEventListener('click', async () => {
   }
 });
 
+// ---- Share modal & Canvas card ----
+
+const shareBtn          = el('shareBtn');
+const shareModal        = el('shareModal');
+const shareCloseBtn     = el('shareCloseBtn');
+const shareDownloadBtn  = el('shareDownloadBtn');
+const shareLinkCopyBtn  = el('shareLinkCopyBtn');
+const shareLinkText     = el('shareLinkText');
+const shareCardCanvas   = el('shareCardCanvas');
+
+const RARITY_COLORS_HEX = { rare: '#4fa8ff', epic: '#c46bff', legendary: '#ff9f43', mythic: '#ffd95a' };
+
+async function openShareModal() {
+  const code = SpriteStore.getRecoveryCode();
+  if (!code) { showToast('Open Sync first to get your sync code', 'error'); return; }
+  const link = `${location.origin}/share?code=${encodeURIComponent(code)}`;
+  shareLinkText.textContent = link;
+  shareModal.hidden = false;
+  await drawShareCard(shareCardCanvas, code);
+}
+
+shareBtn.addEventListener('click', openShareModal);
+shareCloseBtn.addEventListener('click', () => { shareModal.hidden = true; });
+shareModal.addEventListener('click', (e) => { if (e.target === shareModal) shareModal.hidden = true; });
+
+shareLinkCopyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(shareLinkText.textContent)
+    .then(() => showToast('Link copied!'))
+    .catch(() => showToast('Copy failed', 'error'));
+});
+
+shareDownloadBtn.addEventListener('click', async () => {
+  const code = SpriteStore.getRecoveryCode();
+  const hi = document.createElement('canvas');
+  hi.width = 1080; hi.height = 1080;
+  await drawShareCard(hi, code);
+  const a = document.createElement('a');
+  a.href = hi.toDataURL('image/png');
+  a.download = `sprite-collection-${code || 'card'}.png`;
+  a.click();
+});
+
+async function drawShareCard(canvas, code) {
+  await document.fonts.ready;
+
+  const W = 1080, H = 1080;
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const state    = SpriteStore.getCurrentState();
+  const owned    = CATALOG.filter(s => state[s.id]?.owned).length;
+  const mastered = CATALOG.filter(s => state[s.id]?.mastered).length;
+  const total    = CATALOG.length;
+  const pct      = owned / total;
+  const username = getUsername();
+
+  // Background
+  ctx.fillStyle = '#060a12';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow
+  const glow = ctx.createRadialGradient(W / 2, 380, 0, W / 2, 380, 600);
+  glow.addColorStop(0, 'rgba(139,108,255,0.12)');
+  glow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // Top gradient bar
+  const topGrad = ctx.createLinearGradient(0, 0, W, 0);
+  topGrad.addColorStop(0, '#8b6cff');
+  topGrad.addColorStop(1, '#22d3ee');
+  ctx.fillStyle = topGrad;
+  ctx.fillRect(0, 0, W, 8);
+
+  // Brand
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#8b6cff';
+  ctx.font = '700 44px "Space Grotesk"';
+  ctx.fillText('◆', 80, 112);
+  ctx.fillStyle = '#eef1f8';
+  ctx.font = '600 40px "Space Grotesk"';
+  ctx.fillText('SPRITE TRACKER', 136, 112);
+
+  // Username / code
+  const displayName = username || code || '';
+  if (displayName) {
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    ctx.font = '500 24px Inter';
+    ctx.fillText(displayName, 80, 152);
+  }
+
+  // Divider
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(80, 180); ctx.lineTo(W - 80, 180); ctx.stroke();
+
+  // Big fraction
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#eef1f8';
+  ctx.font = '700 220px "Space Grotesk"';
+  const ownedStr  = String(owned);
+  const totalStr  = String(total);
+  ctx.fillText(ownedStr, W / 2 - 90, 440);
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.font = '300 140px "Space Grotesk"';
+  ctx.fillText('/', W / 2 + 40, 420);
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '600 100px "Space Grotesk"';
+  ctx.fillText(totalStr, W / 2 + 180, 390);
+
+  // Subtitle
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.font = '500 34px Inter';
+  ctx.fillText(`sprites collected  ·  ${mastered} mastered ★`, W / 2, 498);
+
+  // Progress bar
+  const BX = 80, BY = 540, BW = W - 160, BH = 14;
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  roundRectPath(ctx, BX, BY, BW, BH, 7); ctx.fill();
+  if (pct > 0) {
+    const fillGrad = ctx.createLinearGradient(BX, 0, BX + BW, 0);
+    fillGrad.addColorStop(0, '#8b6cff');
+    fillGrad.addColorStop(1, '#22d3ee');
+    ctx.fillStyle = fillGrad;
+    roundRectPath(ctx, BX, BY, BW * pct, BH, 7); ctx.fill();
+  }
+  // Pct label
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.font = '500 22px Inter';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${Math.round(pct * 100)}%`, W - 80, BY - 10);
+  ctx.textAlign = 'left';
+
+  // Rarity pills
+  const pillW = (BW - 24) / 4;
+  const pillY = 590;
+  RARITIES.forEach((r, i) => {
+    const x = BX + i * (pillW + 8);
+    const sprites = CATALOG.filter(s => s.rarity === r);
+    const cnt = sprites.filter(s => state[s.id]?.owned).length;
+    const color = RARITY_COLORS_HEX[r];
+
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    roundRectPath(ctx, x, pillY, pillW, 88, 10); ctx.fill();
+    ctx.fillStyle = color;
+    roundRectPath(ctx, x, pillY, 4, 88, 2); ctx.fill();
+
+    ctx.fillStyle = color;
+    ctx.font = '700 18px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(RARITY_LABELS[r].toUpperCase(), x + 16, pillY + 30);
+
+    ctx.fillStyle = '#eef1f8';
+    ctx.font = '700 34px "Space Grotesk"';
+    ctx.fillText(`${cnt}/${sprites.length}`, x + 16, pillY + 70);
+  });
+
+  // Mastered sprite strip (up to 9, centered)
+  const masteredSprites = CATALOG.filter(s => state[s.id]?.mastered && s.icon).slice(0, 9);
+  if (masteredSprites.length) {
+    const SIZE = 84, GAP = 14;
+    const stripW = masteredSprites.length * (SIZE + GAP) - GAP;
+    let sx = (W - stripW) / 2;
+    const sy = 724;
+    for (const sprite of masteredSprites) {
+      const imgEl = document.querySelector(`img[src="${sprite.icon}"]`);
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.beginPath(); ctx.arc(sx + SIZE/2, sy + SIZE/2, SIZE/2 + 5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(sx + SIZE/2, sy + SIZE/2, SIZE/2, 0, Math.PI*2); ctx.clip();
+        ctx.drawImage(imgEl, sx, sy, SIZE, SIZE);
+        ctx.restore();
+      }
+      sx += SIZE + GAP;
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '500 20px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('★  mastered', W / 2, sy + SIZE + 26);
+  }
+
+  // Footer
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.font = '500 24px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText(location.host, W / 2, H - 44);
+
+  // Bottom gradient bar
+  const botGrad = ctx.createLinearGradient(0, 0, W, 0);
+  botGrad.addColorStop(0, '#8b6cff');
+  botGrad.addColorStop(1, '#22d3ee');
+  ctx.fillStyle = botGrad;
+  ctx.fillRect(0, H - 8, W, 8);
+}
+
+function roundRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+}
+
 // Show code/username immediately if we already have it (returning visitor), then sync.
 updateHeaderChip();
 updateCodeDisplays(SpriteStore.getRecoveryCode());
