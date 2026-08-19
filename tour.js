@@ -60,6 +60,12 @@
       title: 'Your sync code',
       body: 'Save this code to access your checklist from any device — or share it with a friend so they can add you in Compare.',
     },
+    {
+      before: () => switchView('checklist'),
+      target: () => document.getElementById('shareBtn'),
+      title: 'Share your collection',
+      body: 'Tap the share icon to get a link to your read-only collection page and download a 1080×1080 image card — perfect for Instagram or anywhere else.',
+    },
   ];
 
   let current = 0;
