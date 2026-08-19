@@ -39,6 +39,7 @@ const STORY_ERAS = [
   {
     id: 'ch1', chapter: 'Chapter 1', period: '2017 – 2019', tagline: 'The Island Awakens',
     bgTop: '#0c1a3e', bgBot: '#0a0e1a',
+    image: 'images/story/ch1.jpg',
     beats: [
       { side: 'left',  text: 'A lone bus flies over an island. Ninety-nine players drop. One survives.' },
       { side: 'right', text: 'Kevin the Cube rolls across the map — it sings, teleports players, and reshapes the land around it.' },
@@ -49,6 +50,7 @@ const STORY_ERAS = [
   {
     id: 'ch2', chapter: 'Chapter 2', period: '2019 – 2021', tagline: 'A New Shore',
     bgTop: '#0d2233', bgBot: '#071620',
+    image: 'images/story/ch2.jpg',
     beats: [
       { side: 'right', text: 'A brand new island rises from the ocean. Boats arrive. Fishing begins. The map breathes.' },
       { side: 'left',  text: 'The IO — Imagined Order — surfaces, drilling bunkers and controlling the loop from below.' },
@@ -59,6 +61,7 @@ const STORY_ERAS = [
   {
     id: 'ch3', chapter: 'Chapter 3', period: '2022', tagline: 'The Flip',
     bgTop: '#0a2214', bgBot: '#060e08',
+    image: 'images/story/ch3.jpg',
     beats: [
       { side: 'left',  text: 'The island flips upside-down. First snowfall. Spider-Man web-shooters swing across the map.' },
       { side: 'right', text: 'Chrome spreads — a silvery blight consuming trees, buildings, and players. Reality Trees bloom.' },
@@ -69,6 +72,7 @@ const STORY_ERAS = [
   {
     id: 'ch4', chapter: 'Chapter 4', period: '2023', tagline: 'Mega City',
     bgTop: '#16082e', bgBot: '#0e051e',
+    image: 'images/story/ch4.jpg',
     beats: [
       { side: 'right', text: 'A futuristic Mega City rises. Grind rails arc between towers. Hyper Sprint redefines movement.' },
       { side: 'left',  text: 'Crossovers peak: Geralt of Rivia, Eren Yeager, Peter Griffin, and TMNT all walk the same island.' },
@@ -79,6 +83,7 @@ const STORY_ERAS = [
   {
     id: 'ch5', chapter: 'Chapter 5', period: '2024', tagline: 'Underground',
     bgTop: '#201408', bgBot: '#120a04',
+    image: 'images/story/ch5.jpg',
     beats: [
       { side: 'left',  text: 'A secret society emerges. Underground vaults hold medallions granting boss-tier abilities.' },
       { side: 'right', text: 'Mount Olympus descends — gods walk the island. Peter Griffin defends the Fortnitemares with a shotgun.' },
@@ -89,6 +94,7 @@ const STORY_ERAS = [
   {
     id: 'ch6s1', chapter: 'Chapter 6 · Season 1', period: 'Dec 2024', tagline: 'Sprites Awaken',
     bgTop: '#2a0810', bgBot: '#160404',
+    image: 'images/story/ch6s1.jpg',
     beats: [
       { side: 'right', text: 'Oninoshima — a mystical Japanese-inspired island. Ancient shrines pulse with unknown energy.' },
       { side: 'left',  text: 'Sprites emerge: tiny magical companions bonded to players, each granting a unique battle ability.' },
@@ -99,6 +105,7 @@ const STORY_ERAS = [
   {
     id: 'ch7s3', chapter: 'Chapter 7 · Season 3', period: 'Jun 2026', tagline: 'Runners',
     bgTop: '#060f2a', bgBot: '#04091a',
+    image: 'images/story/ch7s3.jpg',
     beats: [
       { side: 'left',  text: 'The Runners arrive — a new faction racing the neon-streaked island at impossible speeds.' },
       { side: 'right', text: 'Fifteen new Sprite species emerge, including Batman, John Wick, and Ironmouse.' },
@@ -1080,6 +1087,18 @@ function renderStory() {
       <p class="story-tagline">${era.tagline}</p>
     `;
     section.appendChild(header);
+
+    if (era.image) {
+      const panel = document.createElement('div');
+      panel.className = 'story-keyart-panel';
+      const img = document.createElement('img');
+      img.src = era.image;
+      img.alt = `${era.chapter} key art`;
+      img.className = 'story-keyart-img';
+      img.loading = 'lazy';
+      panel.appendChild(img);
+      section.appendChild(panel);
+    }
 
     const beatsWrap = document.createElement('div');
     beatsWrap.className = 'story-beats';

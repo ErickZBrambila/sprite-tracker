@@ -36,6 +36,18 @@
       body: 'See your progress over time with charts, rarity breakdowns, and a recent activity feed.',
     },
     {
+      before: () => switchView('wiki'),
+      target: () => document.querySelector('[data-view="wiki"]'),
+      title: 'Sprite Wiki',
+      body: 'Tap any Sprite card to open its wiki entry — locations, lore, and all available variants at a glance.',
+    },
+    {
+      before: () => switchView('story'),
+      target: () => document.querySelector('[data-view="story"]'),
+      title: 'Story Chronicle',
+      body: 'Scroll through every Fortnite chapter like a comic book — from the original island to the Sprites\' arrival and beyond.',
+    },
+    {
       before: () => switchView('compare'),
       target: () => document.querySelector('.compare-add-btn'),
       scroll: true,

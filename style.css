@@ -1244,6 +1244,22 @@ button:active { transform: scale(0.97); }
 
 .story-era--upcoming { opacity: 0.88; }
 
+/* Chapter key art panel */
+.story-keyart-panel {
+  width: 100%;
+  max-width: 680px;
+  margin: 28px auto 8px;
+}
+.story-keyart-img {
+  width: 100%;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
 /* Era header */
 .story-era-header {
   text-align: center;
