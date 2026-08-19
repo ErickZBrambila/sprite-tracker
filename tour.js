@@ -1,5 +1,5 @@
 (function () {
-  const TOUR_KEY = 'sprite-tracker:toured:v1';
+  const TOUR_KEY = 'sprite-tracker:toured:v2';
 
   function hasSeen() { return localStorage.getItem(TOUR_KEY) === '1'; }
   function markSeen() { localStorage.setItem(TOUR_KEY, '1'); }
