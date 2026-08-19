@@ -37,7 +37,7 @@
   const SPECIES = [
     // -- Ch6 Season 1 originals ---------------------------------------------
     ['Earth', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube', 'Quack', 'Gem'], 'Higher chance to pull rare items/weapons from chests.', 'ch6s1'],
-    ['Air', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Increases sprint speed and jump height; nullifies fall damage.', 'ch7s3'],
+    ['Air', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil'], 'Increases sprint speed and jump height; nullifies fall damage.', 'ch6s1'],
     ['Fire', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack'], 'Triggers a fiery burst after dealing enough damage to an enemy.', 'ch6s1'],
     ['Water', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Quack', 'Gem'], 'Slowly replenishes shields for you and nearby squadmates while in water.', 'ch6s1'],
     ['Fishy', 'rare', ['Gold', 'Gummy', 'Galaxy', 'Cube'], 'Boosts swim speed; movement boost after taking damage.', 'ch7s3'],

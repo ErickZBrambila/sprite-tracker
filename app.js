@@ -13,6 +13,7 @@ const checklistViewEl = el('checklistView');
 const dashboardViewEl = el('dashboardView');
 const compareViewEl   = el('compareView');
 const wikiViewEl      = el('wikiView');
+const storyViewEl     = el('storyView');
 const viewSwitchEl = el('viewSwitch');
 const exportBtn = el('exportBtn');
 const importBtn = el('importBtn');
@@ -33,6 +34,90 @@ const RARITY_LABELS = { rare: 'Rare', epic: 'Epic', legendary: 'Legendary', myth
 const VARIANT_TYPES = ['Base', 'Gold', 'Gummy', 'Galaxy', 'Holofoil', 'Cube', 'Quack', 'Gem'];
 
 const SEASON_LABELS = { ch6s1: 'Ch6 S1', ch7s3: 'Ch7 S3', ch7s4: 'Ch7 S4' };
+
+const STORY_ERAS = [
+  {
+    id: 'ch1', chapter: 'Chapter 1', period: '2017 – 2019', tagline: 'The Island Awakens',
+    bgTop: '#0c1a3e', bgBot: '#0a0e1a',
+    beats: [
+      { side: 'left',  text: 'A lone bus flies over an island. Ninety-nine players drop. One survives.' },
+      { side: 'right', text: 'Kevin the Cube rolls across the map — it sings, teleports players, and reshapes the land around it.' },
+      { side: 'left',  text: 'Season 10: A rocket launches. Reality cracks. The island is swallowed by a black hole. Fortnite goes dark for two days.' },
+    ],
+    sprites: [],
+  },
+  {
+    id: 'ch2', chapter: 'Chapter 2', period: '2019 – 2021', tagline: 'A New Shore',
+    bgTop: '#0d2233', bgBot: '#071620',
+    beats: [
+      { side: 'right', text: 'A brand new island rises from the ocean. Boats arrive. Fishing begins. The map breathes.' },
+      { side: 'left',  text: 'The IO — Imagined Order — surfaces, drilling bunkers and controlling the loop from below.' },
+      { side: 'right', text: 'Season 7: Aliens invade. The mothership abducts POIs mid-match. The island is never the same.' },
+    ],
+    sprites: [],
+  },
+  {
+    id: 'ch3', chapter: 'Chapter 3', period: '2022', tagline: 'The Flip',
+    bgTop: '#0a2214', bgBot: '#060e08',
+    beats: [
+      { side: 'left',  text: 'The island flips upside-down. First snowfall. Spider-Man web-shooters swing across the map.' },
+      { side: 'right', text: 'Chrome spreads — a silvery blight consuming trees, buildings, and players. Reality Trees bloom.' },
+      { side: 'left',  text: 'The Fracture: a live event shatters the island into fragments scattered across reality.' },
+    ],
+    sprites: [],
+  },
+  {
+    id: 'ch4', chapter: 'Chapter 4', period: '2023', tagline: 'Mega City',
+    bgTop: '#16082e', bgBot: '#0e051e',
+    beats: [
+      { side: 'right', text: 'A futuristic Mega City rises. Grind rails arc between towers. Hyper Sprint redefines movement.' },
+      { side: 'left',  text: 'Crossovers peak: Geralt of Rivia, Eren Yeager, Peter Griffin, and TMNT all walk the same island.' },
+      { side: 'right', text: 'The Big Bang — a live concert inside a black hole ends the chapter. A new island is born from the zero point.' },
+    ],
+    sprites: [],
+  },
+  {
+    id: 'ch5', chapter: 'Chapter 5', period: '2024', tagline: 'Underground',
+    bgTop: '#201408', bgBot: '#120a04',
+    beats: [
+      { side: 'left',  text: 'A secret society emerges. Underground vaults hold medallions granting boss-tier abilities.' },
+      { side: 'right', text: 'Mount Olympus descends — gods walk the island. Peter Griffin defends the Fortnitemares with a shotgun.' },
+      { side: 'left',  text: '"Absolute Doom" closes this arc. The island is destroyed and rebuilt once more.' },
+    ],
+    sprites: [],
+  },
+  {
+    id: 'ch6s1', chapter: 'Chapter 6 · Season 1', period: 'Dec 2024', tagline: 'Sprites Awaken',
+    bgTop: '#2a0810', bgBot: '#160404',
+    beats: [
+      { side: 'right', text: 'Oninoshima — a mystical Japanese-inspired island. Ancient shrines pulse with unknown energy.' },
+      { side: 'left',  text: 'Sprites emerge: tiny magical companions bonded to players, each granting a unique battle ability.' },
+      { side: 'right', text: 'Ten species discovered. The era of Sprite collecting begins.' },
+    ],
+    sprites: ['ch6s1'],
+  },
+  {
+    id: 'ch7s3', chapter: 'Chapter 7 · Season 3', period: 'Jun 2026', tagline: 'Runners',
+    bgTop: '#060f2a', bgBot: '#04091a',
+    beats: [
+      { side: 'left',  text: 'The Runners arrive — a new faction racing the neon-streaked island at impossible speeds.' },
+      { side: 'right', text: 'Fifteen new Sprite species emerge, including Batman, John Wick, and Ironmouse.' },
+      { side: 'left',  text: 'August 6: Gem variants debut — the rarest and most coveted Sprite type ever discovered.' },
+    ],
+    sprites: ['ch7s3'],
+  },
+  {
+    id: 'ch7s4', chapter: 'Chapter 7 · Season 4', period: 'Aug 20, 2026', tagline: 'Override',
+    bgTop: '#06160a', bgBot: '#040c06',
+    beats: [
+      { side: 'right', text: 'Override begins. The island rewrites itself — reality is no longer fixed.' },
+      { side: 'left',  text: 'Sonic the Hedgehog leads a new wave of Sprite companions into the island.' },
+      { side: 'right', text: 'Eight new species detected. Their full abilities remain classified.' },
+    ],
+    sprites: ['ch7s4'],
+    upcoming: true,
+  },
+];
 
 // Per-species wiki data: locations and lore notes.
 const WIKI_INFO = {
@@ -204,6 +289,7 @@ function switchView(view) {
   dashboardViewEl.hidden = view !== 'dashboard';
   compareViewEl.hidden   = view !== 'compare';
   wikiViewEl.hidden      = view !== 'wiki';
+  storyViewEl.hidden     = view !== 'story';
   render();
 }
 
@@ -956,6 +1042,159 @@ function renderWiki() {
   wikiViewEl.appendChild(wrap);
 }
 
+// ================= Story view =================
+
+function renderStory() {
+  storyViewEl.innerHTML = '';
+
+  // Progress dots — fixed to the right side of the viewport
+  const progressNav = document.createElement('nav');
+  progressNav.className = 'story-progress';
+  progressNav.setAttribute('aria-label', 'Era navigation');
+  STORY_ERAS.forEach((era) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = 'story-dot';
+    dot.dataset.eraId = era.id;
+    dot.title = `${era.chapter}: ${era.tagline}`;
+    dot.onclick = () => {
+      const target = storyViewEl.querySelector(`.story-era[data-era-id="${era.id}"]`);
+      if (target) storyViewEl.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+    };
+    progressNav.appendChild(dot);
+  });
+  storyViewEl.appendChild(progressNav);
+
+  // Era sections
+  STORY_ERAS.forEach((era) => {
+    const section = document.createElement('section');
+    section.className = `story-era${era.upcoming ? ' story-era--upcoming' : ''}`;
+    section.dataset.eraId = era.id;
+    section.style.background = `linear-gradient(180deg, ${era.bgTop} 0%, ${era.bgBot} 100%)`;
+
+    const header = document.createElement('div');
+    header.className = 'story-era-header';
+    header.innerHTML = `
+      <span class="story-period-pill">${era.period}</span>
+      <h2 class="story-chapter-label">${era.chapter}</h2>
+      <p class="story-tagline">${era.tagline}</p>
+    `;
+    section.appendChild(header);
+
+    const beatsWrap = document.createElement('div');
+    beatsWrap.className = 'story-beats';
+    era.beats.forEach((beat) => {
+      const card = document.createElement('div');
+      card.className = `story-beat story-beat--${beat.side}`;
+      card.innerHTML = `<p>${beat.text}</p>`;
+      beatsWrap.appendChild(card);
+    });
+    section.appendChild(beatsWrap);
+
+    if (era.sprites.length) {
+      const inEra = ALL_SPRITES.filter((s) => s.variant === 'Base' && era.sprites.includes(s.season));
+      if (inEra.length) {
+        const spritesRow = document.createElement('div');
+        spritesRow.className = 'story-sprites';
+        inEra.forEach((sprite, i) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'story-sprite-wrapper';
+          wrapper.style.setProperty('--i', i);
+
+          if (sprite.icon) {
+            const img = document.createElement('img');
+            img.src = sprite.icon;
+            img.alt = sprite.species;
+            img.className = `story-sprite-img${era.upcoming ? ' story-sprite-img--upcoming' : ''}`;
+            img.loading = 'lazy';
+            if (!era.upcoming) {
+              img.title = `${sprite.species} · tap for wiki`;
+              img.onclick = () => { switchView('wiki'); setTimeout(() => openWikiDetail(sprite.species), 50); };
+            }
+            wrapper.appendChild(img);
+          } else {
+            const ph = document.createElement('div');
+            ph.className = `story-sprite-placeholder story-sprite-placeholder--${sprite.rarity}${era.upcoming ? ' story-sprite-placeholder--upcoming' : ''}`;
+            ph.textContent = sprite.species[0];
+            wrapper.appendChild(ph);
+          }
+
+          const label = document.createElement('span');
+          label.className = 'story-sprite-label';
+          label.textContent = sprite.species;
+          wrapper.appendChild(label);
+
+          spritesRow.appendChild(wrapper);
+        });
+        section.appendChild(spritesRow);
+      }
+    }
+
+    storyViewEl.appendChild(section);
+  });
+
+  // Outro
+  const outro = document.createElement('div');
+  outro.className = 'story-outro';
+  outro.innerHTML = `
+    <p class="story-outro-headline">Your Sprite journey continues.</p>
+    <p class="story-outro-sub">Every season, new companions emerge. Keep collecting.</p>
+    <button type="button" class="btn-primary story-cta">Back to your collection →</button>
+  `;
+  outro.querySelector('.story-cta').onclick = () => switchView('checklist');
+  storyViewEl.appendChild(outro);
+
+  initStoryScroll();
+}
+
+function initStoryScroll() {
+  const sections = [...storyViewEl.querySelectorAll('.story-era')];
+  const dots     = [...storyViewEl.querySelectorAll('.story-dot')];
+
+  // Beat card entrance
+  const beatIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('story-beat--visible');
+          beatIO.unobserve(entry.target);
+        }
+      });
+    },
+    { root: storyViewEl, threshold: 0.15 }
+  );
+  storyViewEl.querySelectorAll('.story-beat').forEach((el) => beatIO.observe(el));
+
+  // Sprite float-in
+  const spriteIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('story-sprite-wrapper--visible');
+          spriteIO.unobserve(entry.target);
+        }
+      });
+    },
+    { root: storyViewEl, threshold: 0.1 }
+  );
+  storyViewEl.querySelectorAll('.story-sprite-wrapper').forEach((el) => spriteIO.observe(el));
+
+  // Era tracking — updates progress dots
+  const eraIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const idx = STORY_ERAS.findIndex((e) => e.id === entry.target.dataset.eraId);
+        dots.forEach((d, i) => d.classList.toggle('story-dot--active', i === idx));
+      });
+    },
+    { root: storyViewEl, threshold: 0.4 }
+  );
+  sections.forEach((s) => eraIO.observe(s));
+
+  if (dots[0]) dots[0].classList.add('story-dot--active');
+}
+
 // ---- Add friend modal ----
 const addFriendModal      = el('addFriendModal');
 const friendCodeInput     = el('friendCodeInput');
@@ -992,6 +1231,7 @@ function render() {
   if (currentView === 'checklist') renderChecklist();
   else if (currentView === 'compare') renderCompare();
   else if (currentView === 'wiki') renderWiki();
+  else if (currentView === 'story') renderStory();
   else renderDashboard();
 }
 
