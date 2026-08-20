@@ -9,6 +9,246 @@ function setDeviceType() {
 setDeviceType();
 window.addEventListener('resize', setDeviceType);
 
+// ---- i18n ----
+const STRINGS = {
+  en: {
+    nav_checklist:'Checklist', nav_dashboard:'Dashboard', nav_compare:'Compare', nav_wiki:'Wiki', nav_story:'Story',
+    title_share:'Share your collection', title_sync:'Your sync code — click to manage',
+    title_export:'Export your data as a backup file', title_import:'Import a backup file',
+    title_tour:'Start guided tour', title_reset:'Clear all data on this device',
+    sync_modal_title:'Sync across devices',
+    sync_display_name_hint:'Display name — shown in the header and easy to remember.',
+    sync_username_placeholder:'Your name', sync_save_btn:'Save',
+    sync_code_hint:'Your sync code — save it to access your checklist from any browser or device.',
+    sync_connecting:'connecting…', sync_copy_btn:'Copy',
+    sync_qr_hint:'Scan with another device to connect your collection',
+    sync_connect_label:'Connect to an existing account',
+    sync_connect_hint:'Enter a sync code from another device to load its checklist here. <strong>This replaces your current data on this device.</strong>',
+    sync_code_placeholder:'e.g. swift-otter-42', sync_connect_btn:'Connect', sync_close_btn:'Close',
+    friend_modal_title:'Add a friend',
+    friend_modal_hint:'Enter their sync code to compare your collections.',
+    friend_code_label:'Sync code', friend_code_placeholder:'e.g. swift-otter-42',
+    friend_name_label:'Nickname (optional)', friend_name_placeholder:'e.g. Diego',
+    friend_cancel_btn:'Cancel', friend_add_btn:'Add',
+    share_modal_title:'Share your collection',
+    share_modal_hint:'Anyone with this link can view your Sprites — read-only.',
+    share_img_alt:'Your Sprite collection card',
+    share_copy_btn:'Copy', share_close_btn:'Close', share_download_btn:'↓ Download image',
+    share_ios_hint:'Hold the image above and tap <strong>Save to Photos</strong>',
+    share_android_hint:'Hold the image above and tap <strong>Save image</strong> — or tap <strong>↓ Download image</strong> below',
+    confirm_title:'Clear all data?',
+    confirm_body:'This removes your entire Sprite checklist and history from this browser. Export a backup first if you want to keep it.',
+    confirm_cancel:'Cancel', confirm_ok:'Clear everything',
+    search_placeholder:'Search Sprites…',
+    filter_all_rarities:'All rarities', filter_all_variants:'All variants',
+    sort_species:'Sort: Species', sort_alpha:'Sort: A-Z', sort_rarity:'Sort: Rarity',
+    sort_completion:'Sort: Least complete first',
+    view_all:'All', view_owned:'Owned', view_missing:'Missing',
+    view_needs_mastery:'Needs Mastery', view_mastered:'Mastered',
+    season_all:'All Seasons', empty_no_match:'No Sprites match this filter.',
+    stat_collected:'Collected', stat_missing:'Missing',
+    stat_mastered:'Mastered', stat_needs_mastery:'Needs Mastery',
+    season_label_ch6s1:'Ch6 S1 · Sprites Awaken',
+    season_label_ch7s3:'Ch7 S3 · Runners',
+    season_label_ch7s4:'Ch7 S4 · Override',
+    chip_mastered:'Mastered — tap to reset',
+    chip_owned:'Owned — tap to mark Mastered',
+    chip_unowned:'Tap to mark Owned',
+    dashboard_progress:'Progress over time', dashboard_rarity:'By rarity',
+    dashboard_variant:'By variant', dashboard_species:'By species',
+    dashboard_activity:'Recent activity',
+    dashboard_activity_empty:'Nothing tracked yet — head to the Checklist tab to get started.',
+    timeline_empty:'Check off a few Sprites to see your progress over time here.',
+    timeline_collected:'Collected', timeline_mastered:'Mastered',
+    compare_you:'You', compare_collected:'Collected', compare_mastered:'Mastered',
+    compare_share_qr:'▦ Share QR', compare_add_friend:'Add Friend',
+    dot_mastered:'Mastered', dot_owned:'Owned', dot_missing:'Missing',
+    wiki_title:'Sprite Wiki',
+    wiki_subtitle:'Tap any Sprite to see its ability, season, locations, and all variants. Read-only — use the Checklist tab to track your collection.',
+    wiki_season:'Season', wiki_ability:'Ability', wiki_drop_rate:'Drop Rate', wiki_locations:'Locations',
+    wiki_species_count: (n) => `${n} species`,
+    wiki_card_variants: (n) => `${n} variants`,
+    wiki_variants_label: (n) => `Variants (${n})`,
+    wiki_ch6s1_label:'Chapter 6 Season 1',
+    wiki_ch7s3_label:'Chapter 7 Season 3 — Runners',
+    wiki_ch7s4_label:'Chapter 7 Season 4 — Override',
+    story_headline:'Your Sprite journey continues.',
+    story_sub:'Every season, new companions emerge. Keep collecting.',
+    story_cta:'Back to your collection →',
+    share_qr_title:'Share your QR code',
+    share_qr_hint:'Have a friend scan this with their phone camera to add you in Compare.',
+    share_qr_close:'Close', share_qr_copy:'Copy link',
+    activity_mastered:'Mastered', activity_owned:'Marked owned', activity_reset:'Reset',
+    time_just_now:'just now',
+    time_s_ago: (s) => `${s}s ago`,
+    time_m_ago: (m) => `${m}m ago`,
+    time_h_ago: (h) => `${h}h ago`,
+    time_d_ago: (d) => `${d}d ago`,
+    toast_backup_downloaded:'Backup downloaded',
+    toast_imported: (n) => `Imported ${n} events`,
+    toast_cleared:'Cleared',
+    toast_link_copied:'Link copied!',
+    toast_copy_failed:'Copy failed',
+    toast_copy_failed_manual:'Copy failed — select and copy the code manually',
+    toast_sync_code_copied:'Sync code copied',
+    toast_connected:'Connected — checklist loaded from the other device',
+    toast_friend_added: (name) => `${name} added!`,
+    toast_qr_copy:'Link copied — send it to your friend',
+    toast_username_set: (alias) => `Username set — friends can find you as “${alias}”`,
+    toast_username_local: (err) => `Name saved locally. ${err}`,
+    toast_display_name_cleared:'Display name cleared',
+    toast_no_sync_code:'No sync code yet — open Sync first',
+    toast_share_no_code:'Open Sync first to get your sync code',
+    toast_qr_no_lib:'QR library not loaded — check connection.',
+    toast_qr_loaded:'Sync code loaded from QR — tap Connect to link your collection',
+    btn_saving:'Saving…', btn_connecting:'Connecting…', btn_adding:'Adding…',
+    tour_step1_title:'Welcome to Sprite Tracker!',
+    tour_step1_body:"Your personal Fortnite Sprite collection checklist. Let's walk through the key features — takes about 30 seconds.",
+    tour_step2_title:'Tap to collect',
+    tour_step2_body:'Tap any Sprite once to mark it <strong>owned ✓</strong>, again for <strong>mastered ★</strong>, once more to clear. Progress saves instantly.',
+    tour_step3_title:'Progress rings',
+    tour_step3_body:"Tap a ring to filter the checklist — jump straight to what's <em>Missing</em> or <em>Needs Mastery</em>.",
+    tour_step4_title:'Dashboard',
+    tour_step4_body:'See your progress over time with charts, rarity breakdowns, and a recent activity feed.',
+    tour_step5_title:'Sprite Wiki',
+    tour_step5_body:'Tap any Sprite card to open its wiki entry — locations, lore, and all available variants at a glance.',
+    tour_step6_title:'Compare with friends',
+    tour_step6_body:'Tap <strong>Add Friend</strong> and enter their sync code to see their collection side-by-side. Up to 4 friends at once.',
+    tour_step7_title:'Your sync code',
+    tour_step7_body:'Save this code to access your checklist from any device — or share it with a friend so they can add you in Compare.',
+    tour_step8_title:'Share your collection',
+    tour_step8_body:'Tap the share icon to get a link to your read-only collection page and download a 1080×1080 image card — perfect for Instagram or anywhere else.',
+    tour_skip:'Skip tour', tour_next:'Next →', tour_done:'Done!',
+  },
+  es: {
+    nav_checklist:'Lista', nav_dashboard:'Panel', nav_compare:'Comparar', nav_wiki:'Wiki', nav_story:'Historia',
+    title_share:'Compartir tu colección', title_sync:'Tu código de sincronización — toca para gestionar',
+    title_export:'Exportar datos como copia de seguridad', title_import:'Importar copia de seguridad',
+    title_tour:'Iniciar guía rápida', title_reset:'Borrar todos los datos en este dispositivo',
+    sync_modal_title:'Sincronizar entre dispositivos',
+    sync_display_name_hint:'Nombre visible — se muestra en la cabecera.',
+    sync_username_placeholder:'Tu nombre', sync_save_btn:'Guardar',
+    sync_code_hint:'Tu código de sincronización — guárdalo para acceder desde cualquier dispositivo.',
+    sync_connecting:'conectando…', sync_copy_btn:'Copiar',
+    sync_qr_hint:'Escanea con otro dispositivo para conectar tu colección',
+    sync_connect_label:'Conectar a una cuenta existente',
+    sync_connect_hint:'Ingresa el código de otro dispositivo para cargar su lista aquí. <strong>Esto reemplaza tus datos actuales en este dispositivo.</strong>',
+    sync_code_placeholder:'ej. swift-otter-42', sync_connect_btn:'Conectar', sync_close_btn:'Cerrar',
+    friend_modal_title:'Agregar un amigo',
+    friend_modal_hint:'Ingresa su código de sincronización para comparar colecciones.',
+    friend_code_label:'Código de sincronización', friend_code_placeholder:'ej. swift-otter-42',
+    friend_name_label:'Apodo (opcional)', friend_name_placeholder:'ej. Diego',
+    friend_cancel_btn:'Cancelar', friend_add_btn:'Agregar',
+    share_modal_title:'Compartir tu colección',
+    share_modal_hint:'Cualquiera con este enlace puede ver tus Sprites — solo lectura.',
+    share_img_alt:'Tu tarjeta de colección de Sprites',
+    share_copy_btn:'Copiar', share_close_btn:'Cerrar', share_download_btn:'↓ Descargar imagen',
+    share_ios_hint:'Mantén presionada la imagen y toca <strong>Guardar en Fotos</strong>',
+    share_android_hint:'Mantén presionada la imagen y toca <strong>Guardar imagen</strong> — o toca <strong>↓ Descargar imagen</strong> abajo',
+    confirm_title:'¿Borrar todos los datos?',
+    confirm_body:'Esto elimina toda tu lista de Sprites e historial de este navegador. Exporta una copia de seguridad primero si quieres conservarlos.',
+    confirm_cancel:'Cancelar', confirm_ok:'Borrar todo',
+    search_placeholder:'Buscar Sprites…',
+    filter_all_rarities:'Todas las rarezas', filter_all_variants:'Todas las variantes',
+    sort_species:'Orden: Especie', sort_alpha:'Orden: A-Z', sort_rarity:'Orden: Rareza',
+    sort_completion:'Orden: Menos completado',
+    view_all:'Todos', view_owned:'Obtenidos', view_missing:'Faltantes',
+    view_needs_mastery:'Por dominar', view_mastered:'Dominados',
+    season_all:'Todas las temporadas', empty_no_match:'Ningún Sprite coincide con este filtro.',
+    stat_collected:'Recolectados', stat_missing:'Faltantes',
+    stat_mastered:'Dominados', stat_needs_mastery:'Por dominar',
+    season_label_ch6s1:'Ch6 T1 · Sprites Despiertan',
+    season_label_ch7s3:'Ch7 T3 · Corredores',
+    season_label_ch7s4:'Ch7 T4 · Override',
+    chip_mastered:'Dominado — toca para restablecer',
+    chip_owned:'Obtenido — toca para marcar como Dominado',
+    chip_unowned:'Toca para marcar como Obtenido',
+    dashboard_progress:'Progreso en el tiempo', dashboard_rarity:'Por rareza',
+    dashboard_variant:'Por variante', dashboard_species:'Por especie',
+    dashboard_activity:'Actividad reciente',
+    dashboard_activity_empty:'Aún no hay nada registrado — ve a la Lista para empezar.',
+    timeline_empty:'Marca algunos Sprites para ver tu progreso aquí.',
+    timeline_collected:'Recolectados', timeline_mastered:'Dominados',
+    compare_you:'Tú', compare_collected:'Recolectados', compare_mastered:'Dominados',
+    compare_share_qr:'▦ Compartir QR', compare_add_friend:'Agregar amigo',
+    dot_mastered:'Dominado', dot_owned:'Obtenido', dot_missing:'Faltante',
+    wiki_title:'Wiki de Sprites',
+    wiki_subtitle:'Toca cualquier Sprite para ver su habilidad, temporada, ubicaciones y variantes. Solo lectura — usa la Lista para registrar tu colección.',
+    wiki_season:'Temporada', wiki_ability:'Habilidad', wiki_drop_rate:'Tasa de aparición', wiki_locations:'Ubicaciones',
+    wiki_species_count: (n) => `${n} especies`,
+    wiki_card_variants: (n) => `${n} variantes`,
+    wiki_variants_label: (n) => `Variantes (${n})`,
+    wiki_ch6s1_label:'Capítulo 6 Temporada 1',
+    wiki_ch7s3_label:'Capítulo 7 Temporada 3 — Corredores',
+    wiki_ch7s4_label:'Capítulo 7 Temporada 4 — Override',
+    story_headline:'Tu aventura con los Sprites continúa.',
+    story_sub:'Cada temporada, nuevos compañeros aparecen. Sigue coleccionando.',
+    story_cta:'Volver a tu colección →',
+    share_qr_title:'Compartir tu código QR',
+    share_qr_hint:'Pídele a un amigo que escanee esto para agregarte en Comparar.',
+    share_qr_close:'Cerrar', share_qr_copy:'Copiar enlace',
+    activity_mastered:'Dominado', activity_owned:'Obtenido', activity_reset:'Eliminado',
+    time_just_now:'ahora mismo',
+    time_s_ago: (s) => `hace ${s}s`,
+    time_m_ago: (m) => `hace ${m}m`,
+    time_h_ago: (h) => `hace ${h}h`,
+    time_d_ago: (d) => `hace ${d}d`,
+    toast_backup_downloaded:'Copia de seguridad descargada',
+    toast_imported: (n) => `Se importaron ${n} eventos`,
+    toast_cleared:'Borrado',
+    toast_link_copied:'¡Enlace copiado!',
+    toast_copy_failed:'Error al copiar',
+    toast_copy_failed_manual:'Error al copiar — selecciónalo manualmente',
+    toast_sync_code_copied:'Código de sincronización copiado',
+    toast_connected:'Conectado — lista cargada desde el otro dispositivo',
+    toast_friend_added: (name) => `¡${name} agregado!`,
+    toast_qr_copy:'Enlace copiado — envíaselo a tu amigo',
+    toast_username_set: (alias) => `Nombre guardado — tus amigos te encontrarán como “${alias}”`,
+    toast_username_local: (err) => `Nombre guardado localmente. ${err}`,
+    toast_display_name_cleared:'Nombre de pantalla eliminado',
+    toast_no_sync_code:'Aún no tienes código — abre Sincronización primero',
+    toast_share_no_code:'Abre Sincronización primero para obtener tu código',
+    toast_qr_no_lib:'Librería QR no cargada — revisa la conexión.',
+    toast_qr_loaded:'Código cargado desde QR — toca Conectar para vincular tu colección',
+    btn_saving:'Guardando…', btn_connecting:'Conectando…', btn_adding:'Agregando…',
+    tour_step1_title:'¡Bienvenido a Sprite Tracker!',
+    tour_step1_body:'Tu lista personal de Sprites de Fortnite. Te mostramos las funciones principales — tarda unos 30 segundos.',
+    tour_step2_title:'Toca para recolectar',
+    tour_step2_body:'Toca un Sprite una vez para marcarlo como <strong>obtenido ✓</strong>, otra vez para <strong>dominado ★</strong>, y una vez más para quitar. El progreso se guarda al instante.',
+    tour_step3_title:'Anillos de progreso',
+    tour_step3_body:'Toca un anillo para filtrar la lista — ve directamente a los <em>Faltantes</em> o los que están <em>Por dominar</em>.',
+    tour_step4_title:'Panel',
+    tour_step4_body:'Ve tu progreso en el tiempo con gráficas, desglose por rareza y actividad reciente.',
+    tour_step5_title:'Wiki de Sprites',
+    tour_step5_body:'Toca cualquier tarjeta de Sprite para ver su entrada en el wiki — ubicaciones, historia y variantes disponibles.',
+    tour_step6_title:'Comparar con amigos',
+    tour_step6_body:'Toca <strong>Agregar amigo</strong> e ingresa su código para ver su colección junto a la tuya. Hasta 4 amigos a la vez.',
+    tour_step7_title:'Tu código de sincronización',
+    tour_step7_body:'Guarda este código para acceder a tu lista desde cualquier dispositivo — o compártelo para que un amigo te agregue en Comparar.',
+    tour_step8_title:'Compartir tu colección',
+    tour_step8_body:'Toca el ícono de compartir para obtener un enlace a tu colección y descargar una tarjeta 1080×1080 — perfecta para Instagram o donde quieras.',
+    tour_skip:'Omitir guía', tour_next:'Siguiente →', tour_done:'¡Listo!',
+  },
+};
+
+const LANG_KEY = 'sprite-tracker:lang';
+let lang = localStorage.getItem(LANG_KEY) === 'es' ? 'es' : 'en';
+
+function t(key, ...args) {
+  const dict = STRINGS[lang] || STRINGS.en;
+  const val = dict[key] ?? STRINGS.en[key] ?? key;
+  return typeof val === 'function' ? val(...args) : val;
+}
+window.t = t;
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-alt]').forEach(el => { el.alt = t(el.dataset.i18nAlt); });
+}
+
 const checklistViewEl = el('checklistView');
 const dashboardViewEl = el('dashboardView');
 const compareViewEl   = el('compareView');
@@ -24,6 +264,7 @@ const toastEl = el('toast');
 const confirmModal = el('confirmModal');
 const confirmCancel = el('confirmCancel');
 const confirmOk = el('confirmOk');
+const langBtn = el('langBtn');
 
 const ALL_SPRITES = SpritesData.CATALOG;
 const CATALOG  = ALL_SPRITES.filter(s => !s.upcoming); // trackable sprites only
@@ -240,8 +481,8 @@ function buildStatHeadline(ownedCount, masteredCount, seasonTotal, seasonLabel) 
     lbl.textContent = seasonLabel;
     headline.appendChild(lbl);
   }
-  headline.appendChild(ringCard(ownedCount, 'collected', 'Collected', 'Missing'));
-  headline.appendChild(ringCard(masteredCount, 'mastered', 'Mastered', 'Needs Mastery'));
+  headline.appendChild(ringCard(ownedCount, 'collected', t('stat_collected'), t('stat_missing')));
+  headline.appendChild(ringCard(masteredCount, 'mastered', t('stat_mastered'), t('stat_needs_mastery')));
 
   // Animate rings after they're in the DOM
   requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -295,14 +536,14 @@ function confirmDialog(title, body) {
 function relativeTime(iso) {
   const diffMs = Date.now() - new Date(iso).getTime();
   const sec = Math.round(diffMs / 1000);
-  if (sec < 5) return 'just now';
-  if (sec < 60) return `${sec}s ago`;
+  if (sec < 5)  return t('time_just_now');
+  if (sec < 60) return t('time_s_ago', sec);
   const min = Math.round(sec / 60);
-  if (min < 60) return `${min}m ago`;
+  if (min < 60) return t('time_m_ago', min);
   const hr = Math.round(min / 60);
-  if (hr < 24) return `${hr}h ago`;
+  if (hr < 24)  return t('time_h_ago', hr);
   const day = Math.round(hr / 24);
-  if (day < 30) return `${day}d ago`;
+  if (day < 30) return t('time_d_ago', day);
   return new Date(iso).toLocaleDateString();
 }
 
@@ -337,7 +578,7 @@ exportBtn.addEventListener('click', () => {
   a.download = `sprite-tracker-backup-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Backup downloaded');
+  showToast(t('toast_backup_downloaded'));
 });
 
 importBtn.addEventListener('click', () => importFile.click());
@@ -348,7 +589,7 @@ importFile.addEventListener('change', async () => {
   const text = await file.text();
   const result = SpriteStore.importData(text);
   if (result.ok) {
-    showToast(`Imported ${result.imported} events`);
+    showToast(t('toast_imported', result.imported));
     render();
   } else {
     showToast(result.error, 'error');
@@ -356,11 +597,11 @@ importFile.addEventListener('change', async () => {
 });
 
 resetBtn.addEventListener('click', async () => {
-  const ok = await confirmDialog('Clear all data?', 'This removes your entire Sprite checklist and history from this browser. Export a backup first if you want to keep it.');
+  const ok = await confirmDialog(t('confirm_title'), t('confirm_body'));
   if (!ok) return;
   SpriteStore.clearAll();
   render();
-  showToast('Cleared');
+  showToast(t('toast_cleared'));
 });
 
 // ================= Checklist view =================
@@ -381,7 +622,7 @@ function renderChecklist() {
   const seasonPool    = filters.season === 'all' ? CATALOG : CATALOG.filter(s => s.season === filters.season);
   const ownedCount    = seasonPool.filter((s) => state[s.id]?.owned).length;
   const masteredCount = seasonPool.filter((s) => state[s.id]?.mastered).length;
-  const SEASON_HEADLINE_LABELS = { ch6s1: 'Ch6 S1 · Sprites Awaken', ch7s3: 'Ch7 S3 · Runners', ch7s4: 'Ch7 S4 · Override' };
+  const SEASON_HEADLINE_LABELS = { ch6s1: t('season_label_ch6s1'), ch7s3: t('season_label_ch7s3'), ch7s4: t('season_label_ch7s4') };
   const seasonLabel   = filters.season !== 'all' ? SEASON_HEADLINE_LABELS[filters.season] : null;
 
   if (!isUpcoming) wrap.appendChild(buildStatHeadline(ownedCount, masteredCount, seasonPool.length, seasonLabel));
@@ -393,27 +634,27 @@ function renderChecklist() {
 
     const searchInput = document.createElement('input');
     searchInput.type = 'search';
-    searchInput.placeholder = 'Search Sprites…';
+    searchInput.placeholder = t('search_placeholder');
     searchInput.value = filters.search;
     searchInput.className = 'sprite-search';
     searchInput.oninput = () => { filters.search = searchInput.value; renderChecklist(); };
     toolbar.appendChild(searchInput);
 
     toolbar.appendChild(makeSelect('sprite-filter-select', filters.rarity, [
-      ['all', 'All rarities'], ...RARITIES.map((r) => [r, RARITY_LABELS[r]]),
+      ['all', t('filter_all_rarities')], ...RARITIES.map((r) => [r, RARITY_LABELS[r]]),
     ], (v) => { filters.rarity = v; renderChecklist(); }));
 
     toolbar.appendChild(makeSelect('sprite-filter-select', filters.variant, [
-      ['all', 'All variants'], ...VARIANT_TYPES.map((v) => [v, v]),
+      ['all', t('filter_all_variants')], ...VARIANT_TYPES.map((v) => [v, v]),
     ], (v) => { filters.variant = v; renderChecklist(); }));
 
     toolbar.appendChild(makeSelect('sprite-filter-select', filters.sort, [
-      ['species', 'Sort: Species'], ['alpha', 'Sort: A-Z'], ['rarity', 'Sort: Rarity'], ['completion', 'Sort: Least complete first'],
+      ['species', t('sort_species')], ['alpha', t('sort_alpha')], ['rarity', t('sort_rarity')], ['completion', t('sort_completion')],
     ], (v) => { filters.sort = v; renderChecklist(); }));
 
     const viewGroup = document.createElement('div');
     viewGroup.className = 'sprite-view-group';
-    [['all', 'All'], ['owned', 'Owned'], ['missing', 'Missing'], ['needsMastery', 'Needs Mastery'], ['mastered', 'Mastered']].forEach(([value, label]) => {
+    [['all', t('view_all')], ['owned', t('view_owned')], ['missing', t('view_missing')], ['needsMastery', t('view_needs_mastery')], ['mastered', t('view_mastered')]].forEach(([value, label]) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'sprite-view-btn' + (filters.view === value ? ' active' : '');
@@ -429,7 +670,7 @@ function renderChecklist() {
   const seasonRow = document.createElement('div');
   seasonRow.className = 'season-pill-row';
   [
-    ['all',   'All Seasons'],
+    ['all',   t('season_all')],
     ['ch6s1', 'Ch6 S1'],
     ['ch7s3', 'Ch7 S3'],
     ['ch7s4', 'Ch7 S4'],
@@ -484,7 +725,7 @@ function renderChecklist() {
   if (!groups.length) {
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.innerHTML = `<div class="glyph">\u{1f50d}</div><div>No Sprites match this filter.</div>`;
+    empty.innerHTML = `<div class="glyph">\u{1f50d}</div><div>${t('empty_no_match')}</div>`;
     list.appendChild(empty);
   }
 
@@ -525,7 +766,7 @@ function renderChecklist() {
       const chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'sprite-chip' + (s.mastered ? ' mastered' : s.owned ? ' owned' : '');
-      chip.title = s.mastered ? 'Mastered — tap to reset' : s.owned ? 'Owned — tap to mark Mastered' : 'Tap to mark Owned';
+      chip.title = s.mastered ? t('chip_mastered') : s.owned ? t('chip_owned') : t('chip_unowned');
 
       if (sprite.icon) {
         const thumb = document.createElement('div');
@@ -593,7 +834,7 @@ function renderTimelineChart(points) {
   wrap.className = 'timeline-chart';
 
   if (points.length < 2) {
-    wrap.innerHTML = `<div class="empty-state small"><div class="glyph">\u{1f4c8}</div><div>Check off a few Sprites to see your progress over time here.</div></div>`;
+    wrap.innerHTML = `<div class="empty-state small"><div class="glyph">\u{1f4c8}</div><div>${t('timeline_empty')}</div></div>`;
     return wrap;
   }
 
@@ -646,8 +887,8 @@ function renderTimelineChart(points) {
       ${ownedDot}${masteredDot}
     </svg>
     <div class="timeline-legend">
-      <span><i class="swatch owned"></i>Collected</span>
-      <span><i class="swatch mastered"></i>Mastered</span>
+      <span><i class="swatch owned"></i>${t('timeline_collected')}</span>
+      <span><i class="swatch mastered"></i>${t('timeline_mastered')}</span>
       <span class="timeline-range">${new Date(points[0].at).toLocaleDateString()} → ${new Date(points[points.length - 1].at).toLocaleDateString()}</span>
     </div>
   `;
@@ -668,7 +909,7 @@ function renderDashboard() {
   // ---- Progress over time ----
   const section1 = document.createElement('section');
   section1.className = 'dashboard-section';
-  section1.innerHTML = `<h2 class="dashboard-h2">Progress over time</h2>`;
+  section1.innerHTML = `<h2 class="dashboard-h2">${t('dashboard_progress')}</h2>`;
   section1.appendChild(renderTimelineChart(SpriteStore.getTimeline()));
   wrap.appendChild(section1);
 
@@ -679,7 +920,7 @@ function renderDashboard() {
   const RARITY_COLORS = { rare: '#4fa8ff', epic: '#c46bff', legendary: '#ff9f43', mythic: '#ffd95a' };
   const rarityCard = document.createElement('div');
   rarityCard.className = 'dashboard-card';
-  rarityCard.innerHTML = `<h2 class="dashboard-h2">By rarity</h2>`;
+  rarityCard.innerHTML = `<h2 class="dashboard-h2">${t('dashboard_rarity')}</h2>`;
   RARITIES.forEach((r) => {
     const inRarity = CATALOG.filter((s) => s.rarity === r);
     rarityCard.appendChild(bar(RARITY_LABELS[r], inRarity.filter((s) => state[s.id]?.owned).length, inRarity.length, RARITY_COLORS[r]));
@@ -689,7 +930,7 @@ function renderDashboard() {
   // ---- By variant type ----
   const variantCard = document.createElement('div');
   variantCard.className = 'dashboard-card';
-  variantCard.innerHTML = `<h2 class="dashboard-h2">By variant</h2>`;
+  variantCard.innerHTML = `<h2 class="dashboard-h2">${t('dashboard_variant')}</h2>`;
   VARIANT_TYPES.forEach((v) => {
     const inVariant = CATALOG.filter((s) => s.variant === v);
     if (!inVariant.length) return;
@@ -702,7 +943,7 @@ function renderDashboard() {
   // ---- Species leaderboard ----
   const speciesSection = document.createElement('section');
   speciesSection.className = 'dashboard-section';
-  speciesSection.innerHTML = `<h2 class="dashboard-h2">By species</h2>`;
+  speciesSection.innerHTML = `<h2 class="dashboard-h2">${t('dashboard_species')}</h2>`;
   const bySpecies = new Map();
   for (const sprite of CATALOG) {
     if (!bySpecies.has(sprite.species)) bySpecies.set(sprite.species, []);
@@ -724,12 +965,12 @@ function renderDashboard() {
   // ---- Recent activity ----
   const activitySection = document.createElement('section');
   activitySection.className = 'dashboard-section';
-  activitySection.innerHTML = `<h2 class="dashboard-h2">Recent activity</h2>`;
+  activitySection.innerHTML = `<h2 class="dashboard-h2">${t('dashboard_activity')}</h2>`;
   const activity = SpriteStore.getRecentActivity(15);
   if (!activity.length) {
     const empty = document.createElement('div');
     empty.className = 'empty-state small';
-    empty.innerHTML = `<div class="glyph">\u{1f4cb}</div><div>Nothing tracked yet — head to the Checklist tab to get started.</div>`;
+    empty.innerHTML = `<div class="glyph">\u{1f4cb}</div><div>${t('dashboard_activity_empty')}</div>`;
     activitySection.appendChild(empty);
   } else {
     const feed = document.createElement('div');
@@ -739,7 +980,7 @@ function renderDashboard() {
       const row = document.createElement('div');
       row.className = 'activity-row';
       row.innerHTML = `
-        <span class="activity-label activity-${ev.mastered ? 'mastered' : ev.owned ? 'owned' : 'reset'}">${ev.label}</span>
+        <span class="activity-label activity-${ev.mastered ? 'mastered' : ev.owned ? 'owned' : 'reset'}">${ev.mastered ? t('activity_mastered') : ev.owned ? t('activity_owned') : t('activity_reset')}</span>
         <span class="activity-name">${sprite ? `${sprite.variant} ${sprite.species}` : ev.id}</span>
         <span class="activity-time">${relativeTime(ev.at)}</span>
       `;
@@ -768,18 +1009,18 @@ function makePersonCard(name, owned, mastered, color, isYou, friendCode) {
   card.innerHTML = `
     <div class="person-name-row">
       <span class="person-name">${name}</span>
-      ${isYou ? '<span class="person-you-badge">You</span>' : ''}
+      ${isYou ? `<span class="person-you-badge">${t('compare_you')}</span>` : ''}
     </div>
     ${code ? `<div class="person-code">${code}</div>` : ''}
     <div class="person-stats">
-      <div class="person-stat"><span class="person-stat-num">${owned}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Collected</div></div>
-      <div class="person-stat"><span class="person-stat-num">${mastered}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">Mastered</div></div>
+      <div class="person-stat"><span class="person-stat-num">${owned}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">${t('compare_collected')}</div></div>
+      <div class="person-stat"><span class="person-stat-num">${mastered}</span><span class="person-stat-den">/${TOTAL}</span><div class="person-stat-label">${t('compare_mastered')}</div></div>
     </div>
     <div class="person-bar-wrap">
       <div class="person-bar"><div class="person-bar-fill" style="width:${ownedPct}%;background:${color}"></div></div>
       <div class="person-bar"><div class="person-bar-fill" style="width:${mastPct}%;background:${color};opacity:0.6"></div></div>
     </div>
-    ${isYou  ? `<button class="person-qr-btn" title="Show QR for friends to scan">&#x25A6; Share QR</button>` : ''}
+    ${isYou  ? `<button class="person-qr-btn" title="Show QR for friends to scan">${t('compare_share_qr')}</button>` : ''}
     ${!isYou ? `<button class="person-remove-btn" data-code="${friendCode}" title="Remove">✕</button>` : ''}
     ${!isYou ? `<button class="person-refresh-btn" data-code="${friendCode}" title="Refresh">↻</button>` : ''}
   `;
@@ -815,7 +1056,7 @@ function renderCompare() {
   if (friends.length < 4) {
     const addBtn = document.createElement('button');
     addBtn.className = 'compare-add-btn';
-    addBtn.innerHTML = '<span>+</span>Add Friend';
+    addBtn.innerHTML = `<span>+</span>${t('compare_add_friend')}`;
     addBtn.addEventListener('click', () => { el('addFriendModal').hidden = false; el('friendCodeInput').focus(); });
     peopleRow.appendChild(addBtn);
   }
@@ -906,7 +1147,7 @@ function renderCompare() {
         const dot = document.createElement('span');
         dot.className = 'compare-dot' + (s?.mastered ? ' compare-dot--mastered' : s?.owned ? ' compare-dot--owned' : '');
         dot.style.setProperty('--dot-color', p.color);
-        dot.title = `${p.name}: ${s?.mastered ? 'Mastered' : s?.owned ? 'Owned' : 'Missing'}`;
+        dot.title = `${p.name}: ${s?.mastered ? t('dot_mastered') : s?.owned ? t('dot_owned') : t('dot_missing')}`;
         dot.textContent = s?.mastered ? '★' : '';
         dots.appendChild(dot);
       }
@@ -947,14 +1188,14 @@ function openWikiDetail(species) {
     <h3 class="wiki-detail-name">${species}</h3>
     ${baseSprite.icon ? `<div class="wiki-detail-img-wrap"><img src="${baseSprite.icon}" alt="${species} Base" class="wiki-detail-img" /></div>` : ''}
     <div class="wiki-detail-meta">
-      <div class="wiki-meta-row"><span class="wiki-meta-key">Season</span><span class="wiki-meta-val">${sLabel}</span></div>
-      <div class="wiki-meta-row"><span class="wiki-meta-key">Ability</span><span class="wiki-meta-val">${ability}</span></div>
-      <div class="wiki-meta-row"><span class="wiki-meta-key">Drop Rate</span><span class="wiki-meta-val">—</span></div>
-      <div class="wiki-meta-row"><span class="wiki-meta-key">Locations</span><span class="wiki-meta-val">${info.locations || '—'}</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">${t('wiki_season')}</span><span class="wiki-meta-val">${sLabel}</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">${t('wiki_ability')}</span><span class="wiki-meta-val">${ability}</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">${t('wiki_drop_rate')}</span><span class="wiki-meta-val">—</span></div>
+      <div class="wiki-meta-row"><span class="wiki-meta-key">${t('wiki_locations')}</span><span class="wiki-meta-val">${info.locations || '—'}</span></div>
       ${info.lore ? `<div class="wiki-lore">${info.lore}</div>` : ''}
     </div>
     <div class="wiki-detail-variants">
-      <div class="wiki-variants-label">Variants (${allVariants.length})</div>
+      <div class="wiki-variants-label">${t('wiki_variants_label', allVariants.length)}</div>
       <div class="wiki-variants-row">
         ${allVariants.map(s => `
           <div class="wiki-variant-chip">
@@ -980,14 +1221,14 @@ function renderWiki() {
 
   const heading = document.createElement('div');
   heading.className = 'wiki-heading';
-  heading.innerHTML = `<h2 class="wiki-title">Sprite Wiki</h2><p class="wiki-subtitle">Tap any Sprite to see its ability, season, locations, and all variants. Read-only — use the Checklist tab to track your collection.</p>`;
+  heading.innerHTML = `<h2 class="wiki-title">${t('wiki_title')}</h2><p class="wiki-subtitle">${t('wiki_subtitle')}</p>`;
   wrap.appendChild(heading);
 
   // Group by season, then by species within each season
   const seasons = [
-    { key: 'ch6s1', label: 'Chapter 6 Season 1', items: [] },
-    { key: 'ch7s3', label: 'Chapter 7 Season 3 — Runners', items: [] },
-    { key: 'ch7s4', label: 'Chapter 7 Season 4 — Override', items: [], upcoming: false },
+    { key: 'ch6s1', label: t('wiki_ch6s1_label'), items: [] },
+    { key: 'ch7s3', label: t('wiki_ch7s3_label'), items: [] },
+    { key: 'ch7s4', label: t('wiki_ch7s4_label'), items: [], upcoming: false },
   ];
 
   // Build unique species list from ALL_SPRITES, preserving definition order
@@ -1008,7 +1249,7 @@ function renderWiki() {
 
     const sectionHeader = document.createElement('div');
     sectionHeader.className = `wiki-season-header${season.upcoming ? ' wiki-season-header--upcoming' : ''}`;
-    sectionHeader.innerHTML = `<span class="wiki-season-title">${season.label}</span><span class="wiki-season-count">${season.items.length} species</span>`;
+    sectionHeader.innerHTML = `<span class="wiki-season-title">${season.label}</span><span class="wiki-season-count">${t('wiki_species_count', season.items.length)}</span>`;
     section.appendChild(sectionHeader);
 
     const grid = document.createElement('div');
@@ -1041,7 +1282,7 @@ function renderWiki() {
         <div class="wiki-card-name">${sprite.species}</div>
         <div class="wiki-card-meta">
           <span class="wiki-rarity-tag wiki-rarity-tag--${sprite.rarity} wiki-rarity-tag--sm">${RARITY_LABELS[sprite.rarity]}</span>
-          ${season.upcoming ? '<span class="soon-badge">SOON</span>' : `<span class="wiki-card-variants">${allVariantsCount} variants</span>`}
+          ${season.upcoming ? '<span class="soon-badge">SOON</span>' : `<span class="wiki-card-variants">${t('wiki_card_variants', allVariantsCount)}</span>`}
         </div>
       `;
 
@@ -1165,9 +1406,9 @@ function renderStory() {
   const outro = document.createElement('div');
   outro.className = 'story-outro';
   outro.innerHTML = `
-    <p class="story-outro-headline">Your Sprite journey continues.</p>
-    <p class="story-outro-sub">Every season, new companions emerge. Keep collecting.</p>
-    <button type="button" class="btn-primary story-cta">Back to your collection →</button>
+    <p class="story-outro-headline">${t('story_headline')}</p>
+    <p class="story-outro-sub">${t('story_sub')}</p>
+    <button type="button" class="btn-primary story-cta">${t('story_cta')}</button>
   `;
   outro.querySelector('.story-cta').onclick = () => switchView('checklist');
   storyViewEl.appendChild(outro);
@@ -1238,16 +1479,16 @@ addFriendConfirmBtn.addEventListener('click', async () => {
   const name = friendNameInput.value.trim();
   if (!code) return;
   addFriendConfirmBtn.disabled = true;
-  addFriendConfirmBtn.textContent = 'Adding…';
+  addFriendConfirmBtn.textContent = t('btn_adding');
   const result = await SpriteStore.addFriend(code, name);
   addFriendConfirmBtn.disabled = false;
-  addFriendConfirmBtn.textContent = 'Add';
+  addFriendConfirmBtn.textContent = t('friend_add_btn');
   if (result.ok) {
     addFriendModal.hidden = true;
     friendCodeInput.value = '';
     friendNameInput.value = '';
     renderCompare();
-    showToast(`${name || code} added!`);
+    showToast(t('toast_friend_added', name || code));
   } else {
     showToast(result.error, 'error');
   }
@@ -1263,14 +1504,32 @@ function render() {
   else renderDashboard();
 }
 
+function reRenderActiveView() {
+  if (currentView === 'checklist') renderChecklist();
+  else if (currentView === 'dashboard') renderDashboard();
+  else if (currentView === 'compare') renderCompare();
+  else if (currentView === 'wiki') renderWiki();
+  else if (currentView === 'story') renderStory();
+}
+
+langBtn.addEventListener('click', () => {
+  lang = lang === 'en' ? 'es' : 'en';
+  localStorage.setItem(LANG_KEY, lang);
+  langBtn.textContent = lang === 'es' ? 'EN' : 'ES';
+  applyI18n();
+  reRenderActiveView();
+});
+
 render();
+applyI18n();
+langBtn.textContent = lang === 'es' ? 'EN' : 'ES';
 
 // ================= QR code helpers =================
 
 function buildQRCode(container, text) {
   container.innerHTML = '';
   if (typeof QRCode === 'undefined') {
-    container.innerHTML = '<p style="color:var(--muted);font-size:12px">QR library not loaded — check connection.</p>';
+    container.innerHTML = `<p style="color:var(--muted);font-size:12px">${t('toast_qr_no_lib')}</p>`;
     return;
   }
   new QRCode(container, {
@@ -1289,20 +1548,20 @@ function syncDeepLink(code) {
 
 function openShareQRModal() {
   const code = SpriteStore.getRecoveryCode();
-  if (!code) { showToast('No sync code yet — open Sync first', 'error'); return; }
+  if (!code) { showToast(t('toast_no_sync_code'), 'error'); return; }
 
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
   const modal = document.createElement('div');
   modal.className = 'modal share-qr-modal';
   modal.innerHTML = `
-    <h3>Share your QR code</h3>
-    <p class="sync-hint">Have a friend scan this with their phone camera to add you in Compare.</p>
+    <h3>${t('share_qr_title')}</h3>
+    <p class="sync-hint">${t('share_qr_hint')}</p>
     <div class="share-qr-canvas-wrap" id="shareQrCanvas"></div>
     <div class="share-qr-code-label">${code}</div>
     <div class="modal-actions" style="margin-top:16px">
-      <button class="btn-ghost share-qr-close-btn">Close</button>
-      <button class="btn-primary share-qr-copy-btn">Copy link</button>
+      <button class="btn-ghost share-qr-close-btn">${t('share_qr_close')}</button>
+      <button class="btn-primary share-qr-copy-btn">${t('share_qr_copy')}</button>
     </div>
   `;
   backdrop.appendChild(modal);
@@ -1315,8 +1574,8 @@ function openShareQRModal() {
   backdrop.onclick = (e) => { if (e.target === backdrop) close(); };
   modal.querySelector('.share-qr-copy-btn').onclick = () => {
     navigator.clipboard.writeText(syncDeepLink(code))
-      .then(() => showToast('Link copied — send it to your friend'))
-      .catch(() => showToast('Copy failed', 'error'));
+      .then(() => showToast(t('toast_qr_copy')))
+      .catch(() => showToast(t('toast_copy_failed'), 'error'));
   };
 }
 
@@ -1362,7 +1621,7 @@ function updateCodeDisplays(code) {
 }
 
 function openSyncModal() {
-  syncCodeDisplay.textContent = SpriteStore.getRecoveryCode() || 'connecting…';
+  syncCodeDisplay.textContent = SpriteStore.getRecoveryCode() || t('sync_connecting');
   usernameInput.value = getUsername() || '';
   syncCodeInput.value = '';
   syncQrPanel.hidden = true;
@@ -1377,18 +1636,18 @@ usernameSaveBtn.addEventListener('click', async () => {
   updateHeaderChip();
   if (saved) {
     usernameSaveBtn.disabled = true;
-    usernameSaveBtn.textContent = 'Saving…';
+    usernameSaveBtn.textContent = t('btn_saving');
     const result = await SpriteStore.setAlias(saved);
     usernameSaveBtn.disabled = false;
-    usernameSaveBtn.textContent = 'Save';
+    usernameSaveBtn.textContent = t('sync_save_btn');
     updateCodeDisplays(SpriteStore.getRecoveryCode());
     if (result.ok) {
-      showToast(`Username set — friends can find you as "${result.alias}"`);
+      showToast(t('toast_username_set', result.alias));
     } else {
-      showToast(`Name saved locally. ${result.error}`, 'error');
+      showToast(t('toast_username_local', result.error), 'error');
     }
   } else {
-    showToast('Display name cleared');
+    showToast(t('toast_display_name_cleared'));
   }
 });
 
@@ -1404,8 +1663,8 @@ syncCopyBtn.addEventListener('click', () => {
   const code = SpriteStore.getRecoveryCode();
   if (!code) return;
   navigator.clipboard.writeText(code)
-    .then(() => showToast('Sync code copied'))
-    .catch(() => showToast('Copy failed — select and copy the code manually', 'error'));
+    .then(() => showToast(t('toast_sync_code_copied')))
+    .catch(() => showToast(t('toast_copy_failed_manual'), 'error'));
 });
 
 const syncQrBtn   = el('syncQrBtn');
@@ -1429,15 +1688,15 @@ syncConnectBtn.addEventListener('click', async () => {
   const code = syncCodeInput.value.trim();
   if (!code) return;
   syncConnectBtn.disabled = true;
-  syncConnectBtn.textContent = 'Connecting…';
+  syncConnectBtn.textContent = t('btn_connecting');
   const result = await SpriteStore.connectDevice(code);
   syncConnectBtn.disabled = false;
-  syncConnectBtn.textContent = 'Connect';
+  syncConnectBtn.textContent = t('sync_connect_btn');
   if (result.ok) {
     syncModal.hidden = true;
     updateCodeDisplays(SpriteStore.getRecoveryCode());
     render();
-    showToast('Connected — checklist loaded from the other device');
+    showToast(t('toast_connected'));
   } else {
     showToast(result.error, 'error');
   }
@@ -1461,7 +1720,7 @@ const RARITY_COLORS_HEX = { rare: '#4fa8ff', epic: '#c46bff', legendary: '#ff9f4
 
 async function openShareModal() {
   const code = SpriteStore.getRecoveryCode();
-  if (!code) { showToast('Open Sync first to get your sync code', 'error'); return; }
+  if (!code) { showToast(t('toast_share_no_code'), 'error'); return; }
   const link = `${location.origin}/share?code=${encodeURIComponent(code)}`;
   shareLinkText.textContent = link;
   shareModal.hidden = false;
@@ -1474,8 +1733,8 @@ async function openShareModal() {
     shareCardImg.src = shareCardCanvas.toDataURL('image/png');
     shareCardImg.hidden = false;
     shareDeviceHint.innerHTML = isIOS
-      ? 'Hold the image above and tap <strong>Save to Photos</strong>'
-      : 'Hold the image above and tap <strong>Save image</strong> — or tap <strong>↓ Download image</strong> below';
+      ? t('share_ios_hint')
+      : t('share_android_hint');
     shareDeviceHint.hidden = false;
   } else {
     shareCardCanvas.hidden = false;
@@ -1490,8 +1749,8 @@ shareModal.addEventListener('click', (e) => { if (e.target === shareModal) share
 
 shareLinkCopyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(shareLinkText.textContent)
-    .then(() => showToast('Link copied!'))
-    .catch(() => showToast('Copy failed', 'error'));
+    .then(() => showToast(t('toast_link_copied')))
+    .catch(() => showToast(t('toast_copy_failed'), 'error'));
 });
 
 shareDownloadBtn.addEventListener('click', async () => {
@@ -1748,6 +2007,6 @@ SpriteStore.init().then(({ changed }) => {
     openSyncModal();
     syncCodeInput.value = code.trim();
     syncCodeInput.focus();
-    showToast('Sync code loaded from QR — tap Connect to link your collection');
+    showToast(t('toast_qr_loaded'));
   }, 600);
 })();

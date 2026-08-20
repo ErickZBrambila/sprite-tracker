@@ -21,30 +21,31 @@
   </div>
 
   <nav class="view-switch" id="viewSwitch">
-    <button type="button" class="view-switch-btn active" data-view="checklist">Checklist</button>
-    <button type="button" class="view-switch-btn" data-view="dashboard">Dashboard</button>
-    <button type="button" class="view-switch-btn" data-view="compare">Compare</button>
-    <button type="button" class="view-switch-btn" data-view="wiki">Wiki</button>
-    <button type="button" class="view-switch-btn" data-view="story" hidden>Story</button>
+    <button type="button" class="view-switch-btn active" data-view="checklist" data-i18n="nav_checklist">Checklist</button>
+    <button type="button" class="view-switch-btn" data-view="dashboard" data-i18n="nav_dashboard">Dashboard</button>
+    <button type="button" class="view-switch-btn" data-view="compare" data-i18n="nav_compare">Compare</button>
+    <button type="button" class="view-switch-btn" data-view="wiki" data-i18n="nav_wiki">Wiki</button>
+    <button type="button" class="view-switch-btn" data-view="story" data-i18n="nav_story" hidden>Story</button>
   </nav>
 
   <div class="topbar-actions">
-    <button id="shareBtn" class="icon-btn" title="Share your collection">
+    <button id="shareBtn" class="icon-btn" data-i18n-title="title_share" title="Share your collection">
       <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
     </button>
-    <button id="syncBtn" class="sync-code-chip" title="Your sync code — click to manage">
+    <button id="syncBtn" class="sync-code-chip" data-i18n-title="title_sync" title="Your sync code — click to manage">
       <svg viewBox="0 0 24 24" width="13" height="13" style="flex-shrink:0;opacity:0.7"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       <span id="syncCodeChip">···</span>
     </button>
-    <button id="exportBtn" class="icon-btn" title="Export your data as a backup file">
+    <button id="exportBtn" class="icon-btn" data-i18n-title="title_export" title="Export your data as a backup file">
       <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 20h14v-2H5v2zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09L17.5 7.5 12 2z"/></svg>
     </button>
-    <button id="importBtn" class="icon-btn" title="Import a backup file">
+    <button id="importBtn" class="icon-btn" data-i18n-title="title_import" title="Import a backup file">
       <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 16l5.5-5.5-1.42-1.42L13 12.17V2h-2v10.17L7.92 9.08 6.5 10.5 12 16z"/></svg>
     </button>
     <input type="file" id="importFile" accept="application/json" hidden />
-    <button id="helpBtn" class="help-btn" title="Start guided tour">?</button>
-    <button id="resetBtn" class="icon-btn danger" title="Clear all data on this device">
+    <button id="langBtn" class="lang-btn" title="Switch language">ES</button>
+    <button id="helpBtn" class="help-btn" data-i18n-title="title_tour" title="Start guided tour">?</button>
+    <button id="resetBtn" class="icon-btn danger" data-i18n-title="title_reset" title="Clear all data on this device">
       <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
     </button>
   </div>
@@ -67,94 +68,94 @@
 
 <div id="syncModal" class="modal-backdrop" hidden>
   <div class="modal sync-modal">
-    <h3>Sync across devices</h3>
+    <h3 data-i18n="sync_modal_title">Sync across devices</h3>
 
     <div class="sync-section">
-      <p class="sync-hint">Display name — shown in the header and easy to remember.</p>
+      <p class="sync-hint" data-i18n="sync_display_name_hint">Display name — shown in the header and easy to remember.</p>
       <div class="sync-username-row">
-        <input type="text" id="usernameInput" placeholder="Your name" maxlength="32" autocomplete="off" spellcheck="false" />
-        <button type="button" id="usernameSaveBtn" class="btn-primary">Save</button>
+        <input type="text" id="usernameInput" placeholder="Your name" data-i18n-placeholder="sync_username_placeholder" maxlength="32" autocomplete="off" spellcheck="false" />
+        <button type="button" id="usernameSaveBtn" class="btn-primary" data-i18n="sync_save_btn">Save</button>
       </div>
     </div>
 
     <hr class="sync-divider" />
 
     <div class="sync-section">
-      <p class="sync-hint">Your sync code — save it to access your checklist from any browser or device.</p>
+      <p class="sync-hint" data-i18n="sync_code_hint">Your sync code — save it to access your checklist from any browser or device.</p>
       <div class="sync-code-box">
         <span class="sync-code-value" id="syncCodeDisplay">connecting&hellip;</span>
-        <button type="button" class="btn-copy" id="syncCopyBtn">Copy</button>
+        <button type="button" class="btn-copy" id="syncCopyBtn" data-i18n="sync_copy_btn">Copy</button>
         <button type="button" class="btn-copy" id="syncQrBtn" title="Show QR code">QR</button>
       </div>
       <div id="syncQrPanel" class="qr-panel" hidden>
         <div id="syncQrCanvas" class="qr-canvas-wrap"></div>
-        <p class="qr-hint">Scan with another device to connect your collection</p>
+        <p class="qr-hint" data-i18n="sync_qr_hint">Scan with another device to connect your collection</p>
       </div>
     </div>
 
     <hr class="sync-divider" />
 
     <div class="sync-section">
-      <p class="sync-connect-label">Connect to an existing account</p>
-      <p class="sync-hint">Enter a sync code from another device to load its checklist here. <strong>This replaces your current data on this device.</strong></p>
+      <p class="sync-connect-label" data-i18n="sync_connect_label">Connect to an existing account</p>
+      <p class="sync-hint" data-i18n-html="sync_connect_hint">Enter a sync code from another device to load its checklist here. <strong>This replaces your current data on this device.</strong></p>
       <div class="sync-connect-row">
-        <input type="text" id="syncCodeInput" placeholder="e.g. swift-otter-42" autocomplete="off" spellcheck="false" />
-        <button type="button" id="syncConnectBtn" class="btn-primary">Connect</button>
+        <input type="text" id="syncCodeInput" placeholder="e.g. swift-otter-42" data-i18n-placeholder="sync_code_placeholder" autocomplete="off" spellcheck="false" />
+        <button type="button" id="syncConnectBtn" class="btn-primary" data-i18n="sync_connect_btn">Connect</button>
       </div>
     </div>
 
     <div class="modal-actions" style="margin-top:16px">
-      <button type="button" id="syncCloseBtn" class="btn-ghost">Close</button>
+      <button type="button" id="syncCloseBtn" class="btn-ghost" data-i18n="sync_close_btn">Close</button>
     </div>
   </div>
 </div>
 
 <div id="addFriendModal" class="modal-backdrop" hidden>
   <div class="modal">
-    <h3>Add a friend</h3>
-    <p class="sync-hint">Enter their sync code to compare your collections.</p>
+    <h3 data-i18n="friend_modal_title">Add a friend</h3>
+    <p class="sync-hint" data-i18n="friend_modal_hint">Enter their sync code to compare your collections.</p>
     <div class="sync-section">
-      <label class="field-label" for="friendCodeInput">Sync code</label>
-      <input type="text" id="friendCodeInput" placeholder="e.g. swift-otter-42" autocomplete="off" spellcheck="false" />
+      <label class="field-label" for="friendCodeInput" data-i18n="friend_code_label">Sync code</label>
+      <input type="text" id="friendCodeInput" placeholder="e.g. swift-otter-42" data-i18n-placeholder="friend_code_placeholder" autocomplete="off" spellcheck="false" />
     </div>
     <div class="sync-section">
-      <label class="field-label" for="friendNameInput">Nickname (optional)</label>
-      <input type="text" id="friendNameInput" placeholder="e.g. Diego" maxlength="20" autocomplete="off" />
+      <label class="field-label" for="friendNameInput" data-i18n="friend_name_label">Nickname (optional)</label>
+      <input type="text" id="friendNameInput" placeholder="e.g. Diego" data-i18n-placeholder="friend_name_placeholder" maxlength="20" autocomplete="off" />
     </div>
     <div class="modal-actions">
-      <button type="button" id="addFriendCancelBtn" class="btn-ghost">Cancel</button>
-      <button type="button" id="addFriendConfirmBtn" class="btn-primary">Add</button>
+      <button type="button" id="addFriendCancelBtn" class="btn-ghost" data-i18n="friend_cancel_btn">Cancel</button>
+      <button type="button" id="addFriendConfirmBtn" class="btn-primary" data-i18n="friend_add_btn">Add</button>
     </div>
   </div>
 </div>
 
 <div id="shareModal" class="modal-backdrop" hidden>
   <div class="modal share-modal">
-    <h3>Share your collection</h3>
-    <p class="sync-hint">Anyone with this link can view your Sprites — read-only.</p>
+    <h3 data-i18n="share_modal_title">Share your collection</h3>
+    <p class="sync-hint" data-i18n="share_modal_hint">Anyone with this link can view your Sprites — read-only.</p>
     <div class="share-card-wrap">
       <canvas id="shareCardCanvas" class="share-card-canvas"></canvas>
-      <img id="shareCardImg" class="share-card-img" alt="Your Sprite collection card" hidden />
+      <img id="shareCardImg" class="share-card-img" alt="Your Sprite collection card" data-i18n-alt="share_img_alt" hidden />
     </div>
     <p id="shareDeviceHint" class="sync-hint share-ios-hint" hidden></p>
     <div class="share-link-row">
       <span class="share-link-text" id="shareLinkText"></span>
-      <button type="button" id="shareLinkCopyBtn" class="btn-copy">Copy</button>
+      <button type="button" id="shareLinkCopyBtn" class="btn-copy" data-i18n="share_copy_btn">Copy</button>
     </div>
     <div class="modal-actions">
-      <button type="button" id="shareCloseBtn" class="btn-ghost">Close</button>
-      <button type="button" id="shareDownloadBtn" class="btn-primary">↓ Download image</button>
+      <button type="button" id="shareCloseBtn" class="btn-ghost" data-i18n="share_close_btn">Close</button>
+      <button type="button" id="shareDownloadBtn" class="btn-primary" data-i18n="share_download_btn">↓ Download image</button>
     </div>
   </div>
 </div>
 
 <div id="confirmModal" class="modal-backdrop" hidden>
   <div class="modal">
-    <h3 id="confirmTitle">Clear all data?</h3>
-    <p id="confirmBody">This removes your entire Sprite checklist and history from this browser. Export a backup first if you want to keep it.</p>
+    <h3 id="confirmTitle" data-i18n="confirm_title">Clear all data?</h3>
+    <p id="confirmBody" data-i18n="confirm_body">This removes your entire Sprite checklist and history from this browser. Export a backup first if you want to keep it.</p>
     <div class="modal-actions">
-      <button id="confirmCancel" class="btn-ghost">Cancel</button>
-      <button id="confirmOk" class="btn-danger">Clear everything</button>
+      <button id="confirmCancel" class="btn-ghost" data-i18n="confirm_cancel">Cancel</button>
+      <button id="confirmOk" class="btn-danger" data-i18n="confirm_ok">Clear everything</button>
     </div>
   </div>
 </div>

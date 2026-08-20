@@ -9,58 +9,61 @@
     if (btn) btn.click();
   }
 
-  const STEPS = [
-    {
-      target: null,
-      title: 'Welcome to Sprite Tracker!',
-      body: 'Your personal Fortnite Sprite collection checklist. Let\'s walk through the key features — takes about 30 seconds.',
-    },
-    {
-      before: () => switchView('checklist'),
-      target: () => document.querySelector('.sprite-chip'),
-      scroll: true,
-      title: 'Tap to collect',
-      body: 'Tap any Sprite once to mark it <strong>owned ✓</strong>, again for <strong>mastered ★</strong>, once more to clear. Progress saves instantly.',
-    },
-    {
-      before: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-      target: () => document.querySelector('.stat-card'),
-      scroll: true,
-      title: 'Progress rings',
-      body: 'Tap a ring to filter the checklist — jump straight to what\'s <em>Missing</em> or <em>Needs Mastery</em>.',
-    },
-    {
-      before: () => switchView('dashboard'),
-      target: () => document.querySelector('[data-view="dashboard"]'),
-      title: 'Dashboard',
-      body: 'See your progress over time with charts, rarity breakdowns, and a recent activity feed.',
-    },
-    {
-      before: () => switchView('wiki'),
-      target: () => document.querySelector('[data-view="wiki"]'),
-      title: 'Sprite Wiki',
-      body: 'Tap any Sprite card to open its wiki entry — locations, lore, and all available variants at a glance.',
-    },
-    {
-      before: () => switchView('compare'),
-      target: () => document.querySelector('.compare-add-btn'),
-      scroll: true,
-      title: 'Compare with friends',
-      body: 'Tap <strong>Add Friend</strong> and enter their sync code to see their collection side-by-side. Up to 4 friends at once.',
-    },
-    {
-      before: () => switchView('checklist'),
-      target: () => document.getElementById('syncBtn'),
-      title: 'Your sync code',
-      body: 'Save this code to access your checklist from any device — or share it with a friend so they can add you in Compare.',
-    },
-    {
-      before: () => switchView('checklist'),
-      target: () => document.getElementById('shareBtn'),
-      title: 'Share your collection',
-      body: 'Tap the share icon to get a link to your read-only collection page and download a 1080×1080 image card — perfect for Instagram or anywhere else.',
-    },
-  ];
+  function getSteps() {
+    const t = window.t || ((k) => k);
+    return [
+      {
+        target: null,
+        title: t('tour_step1_title'),
+        body: t('tour_step1_body'),
+      },
+      {
+        before: () => switchView('checklist'),
+        target: () => document.querySelector('.sprite-chip'),
+        scroll: true,
+        title: t('tour_step2_title'),
+        body: t('tour_step2_body'),
+      },
+      {
+        before: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+        target: () => document.querySelector('.stat-card'),
+        scroll: true,
+        title: t('tour_step3_title'),
+        body: t('tour_step3_body'),
+      },
+      {
+        before: () => switchView('dashboard'),
+        target: () => document.querySelector('[data-view="dashboard"]'),
+        title: t('tour_step4_title'),
+        body: t('tour_step4_body'),
+      },
+      {
+        before: () => switchView('wiki'),
+        target: () => document.querySelector('[data-view="wiki"]'),
+        title: t('tour_step5_title'),
+        body: t('tour_step5_body'),
+      },
+      {
+        before: () => switchView('compare'),
+        target: () => document.querySelector('.compare-add-btn'),
+        scroll: true,
+        title: t('tour_step6_title'),
+        body: t('tour_step6_body'),
+      },
+      {
+        before: () => switchView('checklist'),
+        target: () => document.getElementById('syncBtn'),
+        title: t('tour_step7_title'),
+        body: t('tour_step7_body'),
+      },
+      {
+        before: () => switchView('checklist'),
+        target: () => document.getElementById('shareBtn'),
+        title: t('tour_step8_title'),
+        body: t('tour_step8_body'),
+      },
+    ];
+  }
 
   let current = 0;
   let overlay, spotlight, tooltip, keyHandler;
@@ -80,9 +83,11 @@
   }
 
   function showStep(i) {
+    const STEPS = getSteps();
     current = i;
     const step = STEPS[i];
     const isLast = i === STEPS.length - 1;
+    const t = window.t || ((k) => k);
 
     if (step.before) step.before();
 
@@ -91,8 +96,8 @@
       <h3 class="tour-title">${step.title}</h3>
       <p class="tour-body">${step.body}</p>
       <div class="tour-actions">
-        <button class="tour-skip">Skip tour</button>
-        <button class="tour-next btn-primary">${isLast ? 'Done!' : 'Next →'}</button>
+        <button class="tour-skip">${t('tour_skip')}</button>
+        <button class="tour-next btn-primary">${isLast ? t('tour_done') : t('tour_next')}</button>
       </div>
     `;
 
@@ -169,6 +174,7 @@
   }
 
   function handleOverlayClick(e) {
+    const STEPS = getSteps();
     const step = STEPS[current];
     const target = step && step.target ? step.target() : null;
     if (!target) { next(); return; }
@@ -182,6 +188,7 @@
   }
 
   function next() {
+    const STEPS = getSteps();
     if (current < STEPS.length - 1) {
       showStep(current + 1);
     } else {
