@@ -1479,9 +1479,26 @@ shareDownloadBtn.addEventListener('click', async () => {
   const hi = document.createElement('canvas');
   hi.width = 1080; hi.height = 1080;
   await drawShareCard(hi, code);
+  const filename = `sprite-collection-${code || 'card'}.png`;
+
+  // iOS Safari ignores <a download> — use Web Share API to push to Camera Roll
+  if (navigator.canShare) {
+    try {
+      const blob = await new Promise(res => hi.toBlob(res, 'image/png'));
+      const file = new File([blob], filename, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'My Sprite Collection' });
+        return;
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return; // user cancelled share sheet
+    }
+  }
+
+  // Desktop fallback
   const a = document.createElement('a');
   a.href = hi.toDataURL('image/png');
-  a.download = `sprite-collection-${code || 'card'}.png`;
+  a.download = filename;
   a.click();
 });
 
