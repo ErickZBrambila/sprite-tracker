@@ -1249,6 +1249,17 @@ button:active { transform: scale(0.97); }
   display: block;
   background: #060a12;
 }
+.share-card-img {
+  width: 300px;
+  height: 300px;
+  border-radius: 12px;
+  display: block;
+  object-fit: cover;
+}
+.share-ios-hint {
+  text-align: center;
+  margin: -8px 0 8px;
+}
 .share-link-row {
   display: flex;
   align-items: center;

@@ -1452,6 +1452,9 @@ const shareDownloadBtn  = el('shareDownloadBtn');
 const shareLinkCopyBtn  = el('shareLinkCopyBtn');
 const shareLinkText     = el('shareLinkText');
 const shareCardCanvas   = el('shareCardCanvas');
+const shareCardImg      = el('shareCardImg');
+const shareIosHint      = el('shareIosHint');
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 const RARITY_COLORS_HEX = { rare: '#4fa8ff', epic: '#c46bff', legendary: '#ff9f43', mythic: '#ffd95a' };
 
@@ -1462,6 +1465,19 @@ async function openShareModal() {
   shareLinkText.textContent = link;
   shareModal.hidden = false;
   await drawShareCard(shareCardCanvas, code);
+
+  if (isIOS) {
+    // On iOS, canvas can't be long-pressed to save. Convert to <img> so the
+    // native "Save to Photos" context menu appears on long-press.
+    shareCardCanvas.hidden = true;
+    shareCardImg.src = shareCardCanvas.toDataURL('image/png');
+    shareCardImg.hidden = false;
+    shareIosHint.hidden = false;
+  } else {
+    shareCardCanvas.hidden = false;
+    shareCardImg.hidden = true;
+    shareIosHint.hidden = true;
+  }
 }
 
 shareBtn.addEventListener('click', openShareModal);
@@ -1476,28 +1492,25 @@ shareLinkCopyBtn.addEventListener('click', () => {
 
 shareDownloadBtn.addEventListener('click', async () => {
   const code = SpriteStore.getRecoveryCode();
-  const hi = document.createElement('canvas');
-  hi.width = 1080; hi.height = 1080;
-  await drawShareCard(hi, code);
   const filename = `sprite-collection-${code || 'card'}.png`;
 
-  // iOS Safari ignores <a download> — use Web Share API to push to Camera Roll
-  if (navigator.canShare) {
-    try {
-      const blob = await new Promise(res => hi.toBlob(res, 'image/png'));
-      const file = new File([blob], filename, { type: 'image/png' });
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'My Sprite Collection' });
-        return;
-      }
-    } catch (e) {
-      if (e.name === 'AbortError') return; // user cancelled share sheet
+  // Reuse the already-drawn canvas (avoid re-rendering)
+  const dataURL = shareCardCanvas.toDataURL('image/png');
+
+  if (isIOS) {
+    // iOS: open image in new tab — user can long-press → Save to Photos
+    // (same image that's already shown in the modal)
+    const w = window.open();
+    if (w) {
+      w.document.write(`<img src="${dataURL}" style="max-width:100%;display:block;" />`);
+      w.document.title = filename;
     }
+    return;
   }
 
-  // Desktop fallback
+  // Desktop: standard anchor download
   const a = document.createElement('a');
-  a.href = hi.toDataURL('image/png');
+  a.href = dataURL;
   a.download = filename;
   a.click();
 });
