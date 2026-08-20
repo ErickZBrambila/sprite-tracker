@@ -153,14 +153,23 @@ const WIKI_INFO = {
   'Pollo':         { locations: 'Forest clearings, barnyard-adjacent areas',               lore: 'Added Ch7 S3 — Crossover collab. Squad shield regen is excellent.' },
   'John Wick':     { locations: 'Continental hotel POI, urban gardens',                    lore: 'Added Ch7 S3 — Crossover collab. Enemy reveal on knock is invaluable in squads.' },
   'Ironmouse':     { locations: 'Streamer-themed POI, hidden woodland gardens',            lore: 'Added Ch7 S3 — VTuber collab with Ironmouse. Low-grav cloak is a unique escape.' },
-  'Sonic':         { locations: 'Coming Ch7 S4 Override',                                  lore: 'Gaming Legends crossover — confirmed for Ch7 S4 launch.' },
-  'Tails':         { locations: 'Coming Ch7 S4 Override',                                  lore: 'Sidekick Sprite — follows you and pulls in items. Ch7 S4 launch.' },
-  'Klombo':        { locations: 'Coming Ch7 S4 Override',                                  lore: 'Fan-favorite Klombo returns as a Sprite in Ch7 S4.' },
-  'Bullet':        { locations: 'Coming Ch7 S4 Override',                                  lore: null },
-  'Dumpster Dive': { locations: 'Coming Ch7 S4 Override',                                  lore: null },
-  'Honey':         { locations: 'Coming Ch7 S4 Override',                                  lore: null },
-  'X-Ray':         { locations: 'Coming Ch7 S4 Override',                                  lore: null },
-  'Pond':          { locations: 'Coming Ch7 S4 Override',                                  lore: null },
+  'Adventure':     { locations: 'Loot drops, standard chests',                             lore: 'Added Ch7 S4 Override. Upgrades a random item each time it levels up.' },
+  'Bush':          { locations: 'Wooded POIs, shrub-heavy areas',                          lore: 'Added Ch7 S4 Override. The bush mechanic on elimination is exceptional for ambushes.' },
+  'Jonesy':        { locations: 'Named POIs, high-traffic areas',                          lore: 'Added Ch7 S4 Override. Classic Jonesy returns as a Sprite with a damage-recovery heal.' },
+  'Shadow':        { locations: 'Dark POIs, urban zones',                                  lore: 'Added Ch7 S4 Override. Passive auto-reload pairs well with aggressive play styles.' },
+  'Sonic':         { locations: 'Green Hill Zone POI, speed-run areas',                    lore: 'Added Ch7 S4 Override — Sega crossover. Sprint speed scales with each level up.' },
+  'Tails':         { locations: 'Green Hill Zone POI, open areas',                         lore: 'Added Ch7 S4 Override — Sega crossover. Hover ability great for repositioning mid-fight.' },
+  'Jackrabbit':    { locations: 'High-ground POIs, elevated terrain',                      lore: 'Added Ch7 S4 Override. Double-jump enables fast vertical escapes and creative plays.' },
+  'Klombo':        { locations: 'Jungle biomes, open map areas',                           lore: 'Added Ch7 S4 Override — fan-favorite Klombo returns. Consumable-leveling is unique.' },
+  '8-Bit':         { locations: 'Arcade-themed POI, chests across map',                    lore: 'Added Ch7 S4 Override. Guarantees an 8-Bit Shotgun from your first chest of the match.' },
+  'Crown':         { locations: 'High-value POIs, Victory Royale zones',                   lore: 'Added Ch7 S4 Override. Only levels up by winning matches — a true champion\'s Sprite.' },
+  'Killswitch':    { locations: 'Mountain ridges, high-ground zones',                      lore: 'Added Ch7 S4 Override. Hangtime accuracy is a major advantage in 50/50 fights.' },
+  'Bullet':        { locations: 'Ammo box clusters, supply drops',                         lore: 'Added Ch7 S4 Override. Simple but reliable — great for aggressive spray-heavy builds.' },
+  'Dumpster Dive': { locations: 'Urban zones, alley POIs',                                 lore: 'Added Ch7 S4 Override. Jump into any dumpster for bonus loot — unique foraging mechanic.' },
+  'Honey':         { locations: 'Forest clearings, hive-adjacent POIs',                   lore: 'Added Ch7 S4 Override. Reactive defense — bees punish enemies who push you.' },
+  'Pond':          { locations: 'Rivers, ponds, coastal areas',                            lore: 'Added Ch7 S4 Override. Swim speed at early levels; jump + fall immunity at max.' },
+  'X-Ray':         { locations: 'Dense built-up POIs, close-quarters zones',               lore: 'Added Ch7 S4 Override. Wall-hack ability makes it one of the strongest info Sprites.' },
+  'Storm Scout':   { locations: 'Storm edge, open field areas',                            lore: 'Added Ch7 S4 Override. Future circle reveal at max level is invaluable for late game.' },
 };
 
 let currentView = 'checklist';
@@ -355,7 +364,7 @@ function toggleSprite(spriteId) {
 function renderChecklist() {
   checklistViewEl.innerHTML = '';
   const state = SpriteStore.getCurrentState();
-  const isUpcoming = filters.season === 'ch7s4';
+  const isUpcoming = false;
 
   const wrap = document.createElement('div');
   wrap.className = 'sprite-wrap';
@@ -411,31 +420,19 @@ function renderChecklist() {
     ['all',   'All Seasons'],
     ['ch6s1', 'Ch6 S1'],
     ['ch7s3', 'Ch7 S3'],
-    ['ch7s4', '✦ Upcoming'],
+    ['ch7s4', 'Ch7 S4'],
   ].forEach(([value, label]) => {
     const pill = document.createElement('button');
     pill.type = 'button';
     pill.className = 'season-pill' + (filters.season === value ? ' active' : '');
-    if (value === 'ch7s4') pill.classList.add('season-pill--upcoming');
     pill.textContent = label;
     pill.onclick = () => { filters.season = value; renderChecklist(); };
     seasonRow.appendChild(pill);
   });
   wrap.appendChild(seasonRow);
 
-  // ---- Upcoming banner ----
-  if (isUpcoming) {
-    const banner = document.createElement('div');
-    banner.className = 'upcoming-banner';
-    banner.innerHTML = `
-      <div class="upcoming-banner-title">Ch7 S4 Override — Aug 20, 2026</div>
-      <div class="upcoming-banner-body">These Sprites have been announced but are not yet in the game. Tracking opens when the season launches.</div>
-    `;
-    wrap.appendChild(banner);
-  }
-
   // ---- Build item list ----
-  const pool = isUpcoming ? UPCOMING : CATALOG;
+  const pool = CATALOG;
   const q = filters.search.trim().toLowerCase();
 
   const filtered = pool.filter((sprite) => {
@@ -978,7 +975,7 @@ function renderWiki() {
   const seasons = [
     { key: 'ch6s1', label: 'Chapter 6 Season 1', items: [] },
     { key: 'ch7s3', label: 'Chapter 7 Season 3 — Runners', items: [] },
-    { key: 'ch7s4', label: 'Chapter 7 Season 4 — Override (Upcoming)', items: [], upcoming: true },
+    { key: 'ch7s4', label: 'Chapter 7 Season 4 — Override', items: [], upcoming: false },
   ];
 
   // Build unique species list from ALL_SPRITES, preserving definition order

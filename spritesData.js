@@ -61,15 +61,24 @@
     ['Pollo', 'mythic', [], 'Eliminations slowly regenerate your shield and nearby squadmates\'.', 'ch7s3'],
     ['John Wick', 'mythic', [], 'Knocking a player reveals other nearby enemies.', 'ch7s3'],
     ['Ironmouse', 'mythic', [], 'Regenerates health when low; grants Cloak and low gravity while regenerating.', 'ch7s3'],
-    // -- Ch7 Season 4 "Override" -- upcoming (not yet trackable) ----------------
-    ['Sonic', 'mythic', [], 'Lets you use Sonic\'s Spin Dash; greatly boosts sprint speed.', 'ch7s4'],
-    ['Tails', 'epic', [], 'Sidekick: magnetism pulls in nearby items and ammo.', 'ch7s4'],
-    ['Klombo', 'legendary', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
-    ['Bullet', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
-    ['Dumpster Dive', 'epic', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
-    ['Honey', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
-    ['X-Ray', 'epic', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
-    ['Pond', 'rare', [], 'Ability not yet revealed — coming Ch7 S4.', 'ch7s4'],
+    // -- Ch7 Season 4 "Override" (live Aug 20 2026) ----------------------------
+    ['Adventure', 'rare',      ['Gold'], 'Upgrades a random item in your inventory at each level up.', 'ch7s4'],
+    ['Bush',      'epic',      ['Gold'], 'Spawns a Bush on you after a duration; at max level, gain a Bush on elimination.', 'ch7s4'],
+    ['Jonesy',    'rare',      ['Gold'], 'Recover Health or Shield after being damaged (after a short delay).', 'ch7s4'],
+    ['Shadow',    'rare',      ['Gold'], 'Automatically reloads weapons over time, even when unequipped.', 'ch7s4'],
+    ['Sonic',     'legendary', ['Gold'], 'Sprint faster with each level up — Gotta Go Fast!', 'ch7s4'],
+    ['Tails',     'legendary', ['Gold'], 'Grants the ability to hover; hover speed increases with each level up.', 'ch7s4'],
+    ['Jackrabbit','epic',      ['Gold'], 'Perform an extra jump while mid-air; cooldown decreases with each level up.', 'ch7s4'],
+    ['Klombo',    'legendary', ['Gold'], 'Grants random items at each level; only levels up by using Health/Shield consumables.', 'ch7s4'],
+    ['8-Bit',     'epic',      ['Gold'], 'Find an 8-Bit Shotgun in your first chest and gain a score multiplier for it.', 'ch7s4'],
+    ['Crown',     'legendary', ['Gold'], 'Gain extra Crown Wins after a Victory Royale; only levels up through winning.', 'ch7s4'],
+    ['Killswitch','epic',      ['Gold'], 'Improved accuracy when aiming while jumping or falling (Hangtime).', 'ch7s4'],
+    ['Bullet',    'rare',      ['Gold'], 'Ammo boxes grant slightly more ammunition.', 'ch7s4'],
+    ['Dumpster Dive','rare',   ['Gold'], 'Gather loot by jumping into dumpsters.', 'ch7s4'],
+    ['Honey',     'epic',      ['Gold'], 'When damaged by a nearby enemy, a beehive releases a swarm of bees at the attacker.', 'ch7s4'],
+    ['Pond',      'rare',      ['Gold'], 'Speed in water increases per level; level 5 grants jump boost and fall damage reduction.', 'ch7s4'],
+    ['X-Ray',     'legendary', ['Gold'], 'Reveals players through walls and objects for a short time.', 'ch7s4'],
+    ['Storm Scout','epic',     ['Gold'], 'Applies Overdrive after storm damage; reveals future Storm Circles at max level.', 'ch7s4'],
   ];
 
   // Original hotlink source for each icon (id -> URL), all from static.beebom.com. This is the
@@ -214,6 +223,25 @@
     'pollo-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-21_175447126.png',
     'john-wick-base': 'https://static.beebom.com/wp-content/uploads/2026/06/image_2026-07-31_020521147.png',
     'ironmouse-base': 'https://static.beebom.com/wp-content/uploads/2026/07/Ironmouse-Sprite-In-Fortnite-e1785411834897.jpg',
+
+    // Ch7S4 Override (Aug 20 2026)
+    'adventure-base':    'https://static.beebom.com/wp-content/uploads/2026/08/fn-adventure-sprite.jpg',
+    'bush-base':         'https://static.beebom.com/wp-content/uploads/2026/08/fortnite-bush-sprite.jpg',
+    'jonesy-base':       'https://static.beebom.com/wp-content/uploads/2026/08/fortnite-jonesy-sprite.jpg',
+    'shadow-base':       'https://static.beebom.com/wp-content/uploads/2026/08/fortnite-shadow-sprite.jpg',
+    'sonic-base':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-sonic-sprite.jpg',
+    'tails-base':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-tails-sprite.jpg',
+    'jackrabbit-base':   'https://static.beebom.com/wp-content/uploads/2026/08/fn-jackrabbit-sprite.jpg',
+    'klombo-base':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-klombo-sprite.jpg',
+    '8-bit-base':        'https://static.beebom.com/wp-content/uploads/2026/08/fortnite-8-bit-sprite.jpg',
+    'crown-base':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-crown-sprite.jpg',
+    'killswitch-base':   'https://static.beebom.com/wp-content/uploads/2026/08/fn-killswitch-sprite.jpg',
+    'bullet-base':       'https://static.beebom.com/wp-content/uploads/2026/08/Bullet-Sprite.jpg',
+    'dumpster-dive-base':'https://static.beebom.com/wp-content/uploads/2026/08/Dumpster-Dive-Sprite.jpg',
+    'honey-base':        'https://static.beebom.com/wp-content/uploads/2026/08/Honey-Sprite.jpg',
+    'pond-base':         'https://static.beebom.com/wp-content/uploads/2026/08/Pond-Sprite.jpg',
+    'storm-scout-base':  'https://static.beebom.com/wp-content/uploads/2026/08/fn-storm-scout-sprite.jpg',
+    // x-ray-base: no image available yet
   };
 
   function slugify(s) {
@@ -231,7 +259,7 @@
     const catalog = [];
     for (const [species, rarity, variants, ability, season] of SPECIES) {
       const speciesSlug = slugify(species);
-      const upcoming = season === 'ch7s4';
+      const upcoming = false;
       // Upcoming sprites with no known variants only get a placeholder Base entry.
       const allVariants = ['Base', ...variants];
       for (const variant of allVariants) {
