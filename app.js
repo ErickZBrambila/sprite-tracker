@@ -186,14 +186,14 @@ const CARD_TOGGLES = {
   mastered:  { a: 'mastered', b: 'needsMastery' },
 };
 
-function buildStatHeadline(ownedCount, masteredCount) {
+function buildStatHeadline(ownedCount, masteredCount, seasonTotal, seasonLabel) {
   function ringCard(count, mod, labelA, labelB) {
     const activeView = filters.view;
     const toggle = CARD_TOGGLES[mod];
     const isInverted = activeView === toggle.b;
-    const displayCount = isInverted ? (TOTAL - count) : count;
+    const displayCount = isInverted ? (seasonTotal - count) : count;
     const displayLabel = isInverted ? labelB : labelA;
-    const pct = displayCount / TOTAL;
+    const pct = displayCount / seasonTotal;
     const pctLabel = Math.round(pct * 100) + '%';
     const offset = (RING_CIRC * (1 - pct)).toFixed(2);
 
@@ -234,6 +234,12 @@ function buildStatHeadline(ownedCount, masteredCount) {
 
   const headline = document.createElement('div');
   headline.className = 'sprite-headline';
+  if (seasonLabel) {
+    const lbl = document.createElement('p');
+    lbl.className = 'sprite-headline-season';
+    lbl.textContent = seasonLabel;
+    headline.appendChild(lbl);
+  }
   headline.appendChild(ringCard(ownedCount, 'collected', 'Collected', 'Missing'));
   headline.appendChild(ringCard(masteredCount, 'mastered', 'Mastered', 'Needs Mastery'));
 
@@ -248,13 +254,16 @@ function buildStatHeadline(ownedCount, masteredCount) {
 }
 
 // ---- Filters (checklist view) ----
+const SEASON_FILTER_KEY = 'sprite-tracker:season-filter';
+const VALID_SEASONS = new Set(['all', 'ch6s1', 'ch7s3', 'ch7s4']);
+const storedSeason = localStorage.getItem(SEASON_FILTER_KEY);
 let filters = {
   search: '',
   rarity: 'all',
   variant: 'all',
   view: 'all',    // all | owned | missing | needsMastery | mastered
   sort: 'species', // species | alpha | rarity | completion
-  season: 'all',  // all | ch6s1 | ch7s3 | ch7s4
+  season: VALID_SEASONS.has(storedSeason) ? storedSeason : 'ch7s4',
 };
 
 function showToast(message, type = 'info') {
@@ -369,10 +378,13 @@ function renderChecklist() {
   const wrap = document.createElement('div');
   wrap.className = 'sprite-wrap';
 
-  const ownedCount    = CATALOG.filter((s) => state[s.id]?.owned).length;
-  const masteredCount = CATALOG.filter((s) => state[s.id]?.mastered).length;
+  const seasonPool    = filters.season === 'all' ? CATALOG : CATALOG.filter(s => s.season === filters.season);
+  const ownedCount    = seasonPool.filter((s) => state[s.id]?.owned).length;
+  const masteredCount = seasonPool.filter((s) => state[s.id]?.mastered).length;
+  const SEASON_HEADLINE_LABELS = { ch6s1: 'Ch6 S1 · Sprites Awaken', ch7s3: 'Ch7 S3 · Runners', ch7s4: 'Ch7 S4 · Override' };
+  const seasonLabel   = filters.season !== 'all' ? SEASON_HEADLINE_LABELS[filters.season] : null;
 
-  if (!isUpcoming) wrap.appendChild(buildStatHeadline(ownedCount, masteredCount));
+  if (!isUpcoming) wrap.appendChild(buildStatHeadline(ownedCount, masteredCount, seasonPool.length, seasonLabel));
 
   // ---- Toolbar (hidden in upcoming view) ----
   if (!isUpcoming) {
@@ -426,7 +438,7 @@ function renderChecklist() {
     pill.type = 'button';
     pill.className = 'season-pill' + (filters.season === value ? ' active' : '');
     pill.textContent = label;
-    pill.onclick = () => { filters.season = value; renderChecklist(); };
+    pill.onclick = () => { filters.season = value; localStorage.setItem(SEASON_FILTER_KEY, value); renderChecklist(); };
     seasonRow.appendChild(pill);
   });
   wrap.appendChild(seasonRow);
