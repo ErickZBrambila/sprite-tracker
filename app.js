@@ -212,7 +212,7 @@ function buildStatHeadline(ownedCount, masteredCount, seasonTotal, seasonLabel) 
         </svg>
         <div class="stat-overlay">
           <span class="stat-num">${displayCount}</span>
-          <span class="stat-denom">/${TOTAL}</span>
+          <span class="stat-denom">/${seasonTotal}</span>
           <span class="stat-pct">${pctLabel}</span>
         </div>
       </div>
