@@ -1453,8 +1453,9 @@ const shareLinkCopyBtn  = el('shareLinkCopyBtn');
 const shareLinkText     = el('shareLinkText');
 const shareCardCanvas   = el('shareCardCanvas');
 const shareCardImg      = el('shareCardImg');
-const shareIosHint      = el('shareIosHint');
-const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+const shareDeviceHint   = el('shareDeviceHint');
+const isIOS     = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isAndroid = /Android/.test(navigator.userAgent);
 
 const RARITY_COLORS_HEX = { rare: '#4fa8ff', epic: '#c46bff', legendary: '#ff9f43', mythic: '#ffd95a' };
 
@@ -1466,17 +1467,20 @@ async function openShareModal() {
   shareModal.hidden = false;
   await drawShareCard(shareCardCanvas, code);
 
-  if (isIOS) {
-    // On iOS, canvas can't be long-pressed to save. Convert to <img> so the
-    // native "Save to Photos" context menu appears on long-press.
+  if (isIOS || isAndroid) {
+    // Canvas can't be long-pressed on mobile. Convert to <img> so the native
+    // Save to Photos / Save image context menu appears on long-press.
     shareCardCanvas.hidden = true;
     shareCardImg.src = shareCardCanvas.toDataURL('image/png');
     shareCardImg.hidden = false;
-    shareIosHint.hidden = false;
+    shareDeviceHint.innerHTML = isIOS
+      ? 'Hold the image above and tap <strong>Save to Photos</strong>'
+      : 'Hold the image above and tap <strong>Save image</strong> — or tap <strong>↓ Download image</strong> below';
+    shareDeviceHint.hidden = false;
   } else {
     shareCardCanvas.hidden = false;
     shareCardImg.hidden = true;
-    shareIosHint.hidden = true;
+    shareDeviceHint.hidden = true;
   }
 }
 
@@ -1498,8 +1502,8 @@ shareDownloadBtn.addEventListener('click', async () => {
   const dataURL = shareCardCanvas.toDataURL('image/png');
 
   if (isIOS) {
-    // iOS: open image in new tab — user can long-press → Save to Photos
-    // (same image that's already shown in the modal)
+    // iOS Safari ignores <a download>. Open image in a new tab so the user
+    // can long-press → Save to Photos as a secondary path.
     const w = window.open();
     if (w) {
       w.document.write(`<img src="${dataURL}" style="max-width:100%;display:block;" />`);
@@ -1508,7 +1512,7 @@ shareDownloadBtn.addEventListener('click', async () => {
     return;
   }
 
-  // Desktop: standard anchor download
+  // Android and desktop: standard anchor download
   const a = document.createElement('a');
   a.href = dataURL;
   a.download = filename;
