@@ -62,15 +62,15 @@
     ['John Wick', 'mythic', [], 'Knocking a player reveals other nearby enemies.', 'ch7s3'],
     ['Ironmouse', 'mythic', [], 'Regenerates health when low; grants Cloak and low gravity while regenerating.', 'ch7s3'],
     // -- Ch7 Season 4 "Override" (live Aug 20 2026) ----------------------------
-    ['Adventure', 'rare',      ['Gold'], 'Upgrades a random item in your inventory at each level up.', 'ch7s4'],
+    ['Adventure', 'rare',      ['Gold', 'Cheat'], 'Upgrades a random item in your inventory at each level up.', 'ch7s4'],
     ['Bush',      'epic',      ['Gold'], 'Spawns a Bush on you after a duration; at max level, gain a Bush on elimination.', 'ch7s4'],
     ['Jonesy',    'rare',      ['Gold', 'Cheat'], 'Recover Health or Shield after being damaged (after a short delay).', 'ch7s4'],
     ['Shadow',    'rare',      ['Gold'], 'Automatically reloads weapons over time, even when unequipped.', 'ch7s4'],
     ['Sonic',     'legendary', ['Gold', 'Cheat'], 'Sprint faster with each level up — Gotta Go Fast!', 'ch7s4'],
-    ['Tails',     'legendary', ['Gold'], 'Grants the ability to hover; hover speed increases with each level up.', 'ch7s4'],
+    ['Tails',     'legendary', ['Gold', 'Cheat'], 'Grants the ability to hover; hover speed increases with each level up.', 'ch7s4'],
     ['Jackrabbit','epic',      ['Gold'], 'Perform an extra jump while mid-air; cooldown decreases with each level up.', 'ch7s4'],
     ['Klombo',    'legendary', ['Gold'], 'Grants random items at each level; only levels up by using Health/Shield consumables.', 'ch7s4'],
-    ['8-Bit',     'epic',      ['Gold'], 'Find an 8-Bit Shotgun in your first chest and gain a score multiplier for it.', 'ch7s4'],
+    ['8-Bit',     'epic',      ['Gold', 'Cheat'], 'Find an 8-Bit Shotgun in your first chest and gain a score multiplier for it.', 'ch7s4'],
     ['Crown',     'legendary', ['Gold'], 'Gain extra Crown Wins after a Victory Royale; only levels up through winning.', 'ch7s4'],
     ['Killswitch','epic',      ['Gold'], 'Improved accuracy when aiming while jumping or falling (Hangtime).', 'ch7s4'],
     ['Bullet',    'rare',      ['Gold'], 'Ammo boxes grant slightly more ammunition.', 'ch7s4'],
@@ -258,6 +258,10 @@
     // Ch7S4 Cheat variants (Aug 23 2026)
     'sonic-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-sonic-cheat-sprite.jpg',
     'jonesy-cheat':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-jonesy-sprite-cheat-code.jpg',
+    // Tails/8-Bit/Adventure Cheat — cropped from in-game screenshot (no published URL yet)
+    'tails-cheat':        'local:tails-cheat.jpg',
+    '8-bit-cheat':        'local:8-bit-cheat.jpg',
+    'adventure-cheat':    'local:adventure-cheat.jpg',
   };
 
   function slugify(s) {
