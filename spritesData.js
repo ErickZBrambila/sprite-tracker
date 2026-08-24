@@ -63,16 +63,16 @@
     ['Ironmouse', 'mythic', [], 'Regenerates health when low; grants Cloak and low gravity while regenerating.', 'ch7s3'],
     // -- Ch7 Season 4 "Override" (live Aug 20 2026) ----------------------------
     ['Adventure', 'rare',      ['Gold', 'Cheat'], 'Upgrades a random item in your inventory at each level up.', 'ch7s4'],
-    ['Bush',      'epic',      ['Gold'], 'Spawns a Bush on you after a duration; at max level, gain a Bush on elimination.', 'ch7s4'],
+    ['Bush',      'epic',      ['Gold', 'Cheat'], 'Spawns a Bush on you after a duration; at max level, gain a Bush on elimination.', 'ch7s4'],
     ['Jonesy',    'rare',      ['Gold', 'Cheat'], 'Recover Health or Shield after being damaged (after a short delay).', 'ch7s4'],
-    ['Shadow',    'rare',      ['Gold'], 'Automatically reloads weapons over time, even when unequipped.', 'ch7s4'],
+    ['Shadow',    'rare',      ['Gold', 'Cheat'], 'Automatically reloads weapons over time, even when unequipped.', 'ch7s4'],
     ['Sonic',     'legendary', ['Gold', 'Cheat'], 'Sprint faster with each level up — Gotta Go Fast!', 'ch7s4'],
     ['Tails',     'legendary', ['Gold', 'Cheat'], 'Grants the ability to hover; hover speed increases with each level up.', 'ch7s4'],
-    ['Jackrabbit','epic',      ['Gold'], 'Perform an extra jump while mid-air; cooldown decreases with each level up.', 'ch7s4'],
-    ['Klombo',    'legendary', ['Gold'], 'Grants random items at each level; only levels up by using Health/Shield consumables.', 'ch7s4'],
+    ['Jackrabbit','epic',      ['Gold', 'Cheat'], 'Perform an extra jump while mid-air; cooldown decreases with each level up.', 'ch7s4'],
+    ['Klombo',    'legendary', ['Gold', 'Cheat'], 'Grants random items at each level; only levels up by using Health/Shield consumables.', 'ch7s4'],
     ['8-Bit',     'epic',      ['Gold', 'Cheat'], 'Find an 8-Bit Shotgun in your first chest and gain a score multiplier for it.', 'ch7s4'],
-    ['Crown',     'legendary', ['Gold'], 'Gain extra Crown Wins after a Victory Royale; only levels up through winning.', 'ch7s4'],
-    ['Killswitch','epic',      ['Gold'], 'Improved accuracy when aiming while jumping or falling (Hangtime).', 'ch7s4'],
+    ['Crown',     'legendary', ['Gold', 'Cheat'], 'Gain extra Crown Wins after a Victory Royale; only levels up through winning.', 'ch7s4'],
+    ['Killswitch','epic',      ['Gold', 'Cheat'], 'Improved accuracy when aiming while jumping or falling (Hangtime).', 'ch7s4'],
     ['Bullet',    'rare',      ['Gold'], 'Ammo boxes grant slightly more ammunition.', 'ch7s4'],
     ['Dumpster Dive','rare',   ['Gold'], 'Gather loot by jumping into dumpsters.', 'ch7s4'],
     ['Honey',     'epic',      ['Gold'], 'When damaged by a nearby enemy, a beehive releases a swarm of bees at the attacker.', 'ch7s4'],
@@ -255,13 +255,18 @@
     'crown-gold':         'https://static.beebom.com/wp-content/uploads/2026/06/fn-gold-sprite-crown.jpg',
     'killswitch-gold':    'https://static.beebom.com/wp-content/uploads/2026/06/fn-gold-sprite-killswitch.jpg',
     // bullet-gold, dumpster-dive-gold, honey-gold, pond-gold, storm-scout-gold, x-ray-gold: no images yet
-    // Ch7S4 Cheat variants (Aug 23 2026)
-    'sonic-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-sonic-cheat-sprite.jpg',
-    'jonesy-cheat':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-jonesy-sprite-cheat-code.jpg',
-    // Tails/8-Bit/Adventure Cheat — cropped from in-game screenshot (no published URL yet)
-    'tails-cheat':        'local:tails-cheat.jpg',
-    '8-bit-cheat':        'local:8-bit-cheat.jpg',
-    'adventure-cheat':    'local:adventure-cheat.jpg',
+    // Ch7S4 Cheat Master variants (all 11, from Beebom dedicated article Aug 23 2026)
+    'adventure-cheat':    'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-adventure.jpg',
+    'bush-cheat':         'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-bush.jpg',
+    'jonesy-cheat':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-jonesy.jpg',
+    'shadow-cheat':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-shadow.jpg',
+    'sonic-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-sonic.jpg',
+    'tails-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-tails.jpg',
+    'jackrabbit-cheat':   'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-jackrabbit.jpg',
+    'klombo-cheat':       'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-klombo.jpg',
+    '8-bit-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-8bit.jpg',
+    'crown-cheat':        'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-crown.jpg',
+    'killswitch-cheat':   'https://static.beebom.com/wp-content/uploads/2026/08/fn-cheat-master-sprite-killswitch.jpg',
   };
 
   function slugify(s) {
